@@ -23,6 +23,6 @@ Route::post('register', 'PassportController@register');
  
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
- 
+    Route::get('users', 'PassportController@users');
    //Route::resource('products', 'ProductController');
 });

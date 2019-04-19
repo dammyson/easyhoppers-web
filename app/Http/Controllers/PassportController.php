@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PassportController extends Controller
 {
@@ -14,11 +17,11 @@ class PassportController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validate($request, [
+
+        $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-
+            'password' => 'required|min:6'
         ]);
             
         $error = $validator->errors()->first();
@@ -29,12 +32,15 @@ class PassportController extends Controller
          ], 200);
         }
 
+        $role_customer  = Role::where('name', 'customer')->first();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
- 
+        
+        $user->roles()->attach($role_customer);
         $token = $user->createToken($request->email)->accessToken;
  
         return response()->json(
@@ -76,6 +82,18 @@ class PassportController extends Controller
      */
     public function details()
     {
-        return response()->json(['user' => auth()->user()], 200);
+        $user = auth()->user();
+        if($user){
+            return response()->json(['status' => true,'message' => 'Successful','user' => $user], 200);
+        }
+        return response()->json(['status' => false,'message' => 'No User found'], 200);
+    }
+
+    public function users(){
+        $users = User::all();
+        if($users){
+            return response()->json(['status' => true,'message'=> 'Successful','users' => $users], 200);
+        }
+        return response()->json(['status' => false,'message' => 'No user found'], 200);
     }
 }

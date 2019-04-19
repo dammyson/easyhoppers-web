@@ -34,8 +34,8 @@ class RoleTableSeeder extends Seeder
         $role_agent->save();
 
         $role_customer = new Role();
-        $role_customer->name = 'supervisor';
-        $role_customer->description = 'A Supervisor User';
+        $role_customer->name = 'customer';
+        $role_customer->description = 'A customer User';
         $role_customer->save();
     }
 }
