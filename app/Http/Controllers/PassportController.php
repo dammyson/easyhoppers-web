@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Role;
 use Illuminate\Http\Request;
+use Session;
 use Illuminate\Support\Facades\Validator;
 
 class PassportController extends Controller

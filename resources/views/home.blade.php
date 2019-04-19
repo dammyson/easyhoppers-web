@@ -1,4 +1,15 @@
 @extends('layouts.app')
+@push('styles')
+  <link href="{{ asset('admin/js/demo/chart-pie-demo.js') }}" rel="stylesheet">
+@endpush
+@push('scripts')
+    <!-- Page level plugins -->
+  <script src="{{ asset('admin/vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{{ asset('admin/js/demo/chart-area-demo.js') }}"></script>
+  <script src="{{ asset('admin/js/demo/chart-pie-demo.js') }}"></script>
+@endpush
 @section('content')
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">

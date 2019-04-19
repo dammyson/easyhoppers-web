@@ -18,3 +18,15 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/airport/list', 'AirportController@index');
+Route::get('/airport/create', 'AirportController@create');
+Route::post('/airport/create', 'AirportController@store')->name('addPort');
+
+Route::get('/airline/list', 'AirlineController@index');
+Route::get('/airline/create', 'AirlineController@create');
+Route::post('/airline/create', 'AirlineController@store')->name('addAirline');
+
+Route::get('/route/list', 'RouteController@index');
+Route::get('/route/create', 'RouteController@create');
+Route::post('/route/create', 'RouteController@store')->name('addRoute');

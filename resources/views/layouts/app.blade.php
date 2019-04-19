@@ -17,7 +17,7 @@
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
-
+  @stack('styles')
 </head>
 
 <body id="page-top">
@@ -94,13 +94,7 @@
   <!-- Custom scripts for all pages-->
   <script src="{{ asset('admin/js/sb-admin-2.min.js') }}"></script>
 
-  <!-- Page level plugins -->
-  <script src="{{ asset('admin/vendor/chart.js/Chart.min.js') }}"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="{{ asset('admin/js/demo/chart-area-demo.js') }}"></script>
-  <script src="{{ asset('admin/js/demo/chart-pie-demo.js') }}"></script>
-
+  
+  @stack('scripts')
 </body>
-
 </html>
