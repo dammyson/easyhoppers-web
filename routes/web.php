@@ -30,3 +30,8 @@ Route::post('/airline/create', 'AirlineController@store')->name('addAirline');
 Route::get('/route/list', 'RouteController@index');
 Route::get('/route/create', 'RouteController@create');
 Route::post('/route/create', 'RouteController@store')->name('addRoute');
+
+
+Route::get('/schedule/list', 'ScheduleController@index');
+Route::get('/schedule/create', 'ScheduleController@create')->name('createSchedule');
+Route::post('/schedule/create', 'ScheduleController@store')->name('uploadSchedule');

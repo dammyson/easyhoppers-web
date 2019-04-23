@@ -13,13 +13,13 @@
 @endpush
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-2 text-gray-800">Airports</h1>
+<h1 class="h3 mb-2 text-gray-800">Schedules</h1>
           <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p> -->
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">List of Airports </h6>
+              <h6 class="m-0 font-weight-bold text-primary">Schedule listing </h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -35,26 +35,26 @@
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Description</th>
-                      <th>Code</th>
+                      <th>Airline Code</th>
+                      <th>RouteID</th>
                       <th>Last Modified</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                     <th>Name</th>
-                      <th>Description</th>
-                      <th>Code</th>
+                      <th>Airline Code</th>
+                      <th>RouteID</th>
                       <th>Last Modified</th>
                     </tr>
                   </tfoot>
                   <tbody>
-                      @foreach($airports as $airport)
+                      @foreach($schedules as $schedule)
                       <tr>
-                        <td>{{$airport->name}}</td>
-                        <td>{{$airport->description}}</td>
-                        <td>{{$airport->code}}</td>
-                        <td>{{$airport->updated_at}}</td>
+                        <td>{{$schedule->schedule_name}}</td>
+                        <td>{{$schedule->airlineCode}}</td>
+                        <td>{{$schedule->route_id}}</td>
+                        <td>{{$schedule->updated_at}}</td>
                       </tr>
                       @endforeach
                   </tbody>

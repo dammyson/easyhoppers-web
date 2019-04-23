@@ -35,8 +35,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Custom Components:</h6> -->
-            <a class="collapse-item" href="buttons.html">View</a>
-            <a class="collapse-item" href="cards.html">Upload</a>
+            <a class="collapse-item" href="/schedule/list">View</a>
+            <a class="collapse-item" href="/schedule/create">Upload</a>
           </div>
         </div>
       </li>
@@ -92,7 +92,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAirports" aria-expanded="true" aria-controls="collapseAirports">
           <i class="fas fa-fw fa-broadcast-tower"></i>
-          <span>Aiports</span>
+          <span>Airports</span>
         </a>
         <div id="collapseAirports" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">

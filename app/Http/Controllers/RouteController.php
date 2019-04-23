@@ -18,7 +18,7 @@ class RouteController extends Controller
     public function index()
     {
         $routes = Route::all();
-         return view('flightroute.index',['routes'=>$routes]);
+        return view('flightroute.index',['routes'=>$routes]);
     }
 
     /**
@@ -59,7 +59,7 @@ class RouteController extends Controller
         $code = $request->departure_port ."-". $request->arrival_port;
         $departure_port = AirPort::where('code',$request->departure_port)->first();
         $arrival_port = AirPort::where('code',$request->arrival_port)->first();
-        $airline = Route::create(['arrival_port' => $arrival_port->name, 'departure_port' => $departure_port->name,'code'=> $code]);
+        $airline = Route::create(['arrival_port' => $arrival_port->code, 'departure_port' => $departure_port->code,'code'=> $code]);
         Session::flash('success', 'Route added successfully !!!');
 
         $routes = Route::all();

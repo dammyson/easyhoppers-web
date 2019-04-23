@@ -12,7 +12,7 @@ class Schedule extends Model
      * @var array
      */
     protected $fillable = [
-        'airlineCode', 'scheduled_departure_time', 'route_id','amount','scheduled_departure_date','scheduled_arrival_date'
+       'schedule_name', 'airlineCode', 'scheduled_departure_time', 'scheduled_arrival_time','route_id','amount','scheduled_departure_date','scheduled_arrival_date'
     ];
 
 }
