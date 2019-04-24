@@ -34,6 +34,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
+                      <th>RouteID</th>
                       <th>Departure</th>
                       <th>Arrival</th>
                       <th>Short Code</th>
@@ -42,6 +43,7 @@
                   </thead>
                   <tfoot>
                     <tr>
+                      <th>RouteID</th>
                       <th>Departure</th>
                       <th>Arrival</th>
                       <th>Short Code</th>
@@ -51,6 +53,7 @@
                   <tbody>
                       @foreach($routes as $route)
                       <tr>
+                        <td>{{$route->id}}</td>
                         <td>{{$route->departure_port}}</td>
                         <td>{{$route->arrival_port}}</td>
                         <td>{{$route->code}}</td>

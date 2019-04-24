@@ -16,7 +16,20 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        //
+        $schedules = DB::select('select al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id');
+        if($schedules){
+            if(count($schedules) > 0){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'successful',
+                    'data'=> $schedules 
+                ], 200);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'No records found'
+            ], 200);
+        }
     }
 
     /**

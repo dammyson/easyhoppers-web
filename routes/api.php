@@ -25,4 +25,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
     Route::get('users', 'PassportController@users');
    //Route::resource('products', 'ProductController');
+
+   Route::get('schedules', 'API\ScheduleController@index');
+
+
 });
