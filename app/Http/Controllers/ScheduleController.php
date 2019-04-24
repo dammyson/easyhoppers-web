@@ -79,6 +79,7 @@ class ScheduleController extends Controller
                                         'scheduled_arrival_date' => $value->arrival_date,
                                         'scheduled_departure_time' => $value->departure_time,
                                         'scheduled_arrival_time' => $value->arrival_time,
+                                        'description' => $value->description,
                                         'status' => 0,
                                         'created_at' => date('Y-m-d H:i:s'),
                                         'updated_at' => date('Y-m-d H:i:s'),
