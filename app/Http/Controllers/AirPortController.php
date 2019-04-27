@@ -99,4 +99,10 @@ class AirPortController extends Controller
     {
         //
     }
+
+    //abeg i no fit create another controller just to list airport cuz say na API i go just chuk am inside here
+    public function list(){
+        $airport = Airport::all();
+        return response()->json(['message' => $airport, 'status' => true ], 200);
+    }
 }

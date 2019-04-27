@@ -26,7 +26,19 @@ Route::middleware('auth:api')->group(function () {
     Route::get('users', 'PassportController@users');
    //Route::resource('products', 'ProductController');
 
+   Route::get('routes', 'RouteController@list');
+   Route::get('airlines', 'AirlineController@list');
+   Route::get('airports', 'AirportController@list');
+
    Route::get('schedules', 'API\ScheduleController@index');
    Route::put('schedule/update/{id}', 'API\ScheduleController@update');
+   Route::post('schedule/departurePerformanceByDate', 'API\ScheduleController@departurePerformanceByDate');
+   Route::post('schedule/departurePerformanceByDateAndTime', 'API\ScheduleController@departurePerformanceByDateAndTime');
+   Route::post('schedule/arrivalPerformanceByDate', 'API\ScheduleController@arrivalPerformanceByDate');
+   Route::post('schedule/arrivalPerformanceByDateAndTime', 'API\ScheduleController@arrivalPerformanceByDateAndTime');
+   Route::post('schedule/cancelledFlightByDate', 'API\ScheduleController@cancelledFlightByDate');
+   Route::post('schedule/cancelledFlightByDateAndTime', 'API\ScheduleController@cancelledFlightByDateAndTime');
+   Route::post('schedule/delayedFlightByDate', 'API\ScheduleController@delayedFlightByDate');
+   Route::post('schedule/delayedFlightByDateAndTime', 'API\ScheduleController@delayedFlightByDateAndTime');
 
 });

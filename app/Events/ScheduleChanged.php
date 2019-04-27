@@ -19,13 +19,17 @@ class ScheduleChanged
      *
      * @return void
      */
-    public function __construct($schedule)
+    public function __construct($schedule, $type)
     {
+        $this->type = $type;
         $this->schedule = $schedule;
     }
 
     public function getSchedule(){
-        return $this->schedule;
+        $object = new \stdClass();
+        $object->schedule = $this->schedule;
+        $object->type = $this->type;
+        return $object;
     }
 
     /**
