@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Schedule;
+use App\Events\ScheduleChanged;
 
 class ScheduleController extends Controller
 {
@@ -64,6 +65,44 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $schedule = Schedule::where('id', $id)->first();
+        if($schedule){
+            return response()->json(['message' => 'No schedule found', 'status' => false ], 200);
+        }
+        if(!$msg_array = json_decode($request->getContent(), true)){
+            return response()->json(['message' => 'Message body is empty', 'status' => false, 'as'=>$msg_array ], 200);
+        };
+        
+        if(array_key_exists('route_id', $msg_array)) {
+            if(!Route::find($request->route_id)){
+                return response()->json(['message' => 'Invalid route id', 'status' => false ], 200);
+            }
+            $schedule->route_id =  $request->route_id;
+        }
+        if(array_key_exists('actual_departure_time', $msg_array)) {
+            $schedule->actual_departure_time =  $request->actual_departure_time;
+        }
+        if(array_key_exists('actual_departure_date', $msg_array)) {
+            $schedule->actual_departure_date =  $request->actual_arrival_date;
+        }
+        if(array_key_exists('actual_arrival_date', $msg_array)) {
+            $schedule->actual_arrival_date =  $request->actual_arrival_date;
+        }
+        if(array_key_exists('actual_arrival_time', $msg_array)) {
+            $schedule->actual_arrival_time =  $request->actual_arrival_time;
+        }
+        if(array_key_exists('status', $msg_array)) {
+            $schedule->status =  $request->status;
+        }
+
+        if($schedule->save()){
+            event(new ScheduleChanged($schedule));
+        }
+
+        return response()->json([
+            'message' => 'Successful',
+            'status' => true
+        ], 200);
     }
 
     /**
@@ -75,5 +114,6 @@ class ScheduleController extends Controller
     public function destroy($id)
     {
         //
+
     }
 }

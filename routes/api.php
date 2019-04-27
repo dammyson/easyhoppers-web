@@ -27,6 +27,6 @@ Route::middleware('auth:api')->group(function () {
    //Route::resource('products', 'ProductController');
 
    Route::get('schedules', 'API\ScheduleController@index');
-
+   Route::put('schedule/update/{id}', 'API\ScheduleController@update');
 
 });

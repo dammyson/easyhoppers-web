@@ -26,9 +26,11 @@ class CreateSchedulesTable extends Migration
             $table->date('actual_departure_date')->nullable();
             $table->date('scheduled_arrival_date');
             $table->date('actual_arrival_date')->nullable();
+            $table->date('actual_arrival_time')->nullable();
             $table->string('description');
             $table->integer('status');
             $table->timestamps();
+            
         });
     }
 
