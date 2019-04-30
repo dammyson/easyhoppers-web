@@ -35,7 +35,11 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('/schedule/list', 'ScheduleController@index');
     Route::get('/schedule/create', 'ScheduleController@create')->name('createSchedule');
     Route::post('/schedule/create', 'ScheduleController@store')->name('uploadSchedule');
-    
+
+    Route::get('/profile', 'HomeController@profile');
+    Route::get('/users/list', 'HomeController@list');
+    Route::get('/user/new', 'HomeController@create');
+    Route::post('/user/new', 'HomeController@store')->name('uploadUsers');
 });
 
 

@@ -21,36 +21,36 @@ class UserTableSeeder extends Seeder
         $role_customer  = Role::where('name', 'customer')->first();
 
         $superadmin = new User();
-        $superadmin->name = 'SuperAdmin';
-        $superadmin->email = 'superadmin@eazyhoppers.com';
+        $superadmin->name = 'UserSA';
+        $superadmin->email = 'user_sa@eazyhoppers.com';
         $superadmin->password = bcrypt('password');
         $superadmin->save();
         $superadmin->roles()->attach($role_superadmin);
 
         $admin = new User();
-        $admin->name = 'Admin';
-        $admin->email = 'admin@eazyhoppers.com';
+        $admin->name = 'UserA';
+        $admin->email = 'user_a@eazyhoppers.com';
         $admin->password = bcrypt('password');
         $admin->save();
         $admin->roles()->attach($role_admin);
 
         $supervisor = new User();
-        $supervisor->name = 'Supervisor';
-        $supervisor->email = 'supervisor@eazyhoppers.com';
+        $supervisor->name = 'UserS';
+        $supervisor->email = 'user_s@eazyhoppers.com';
         $supervisor->password = bcrypt('password');
         $supervisor->save();
         $supervisor->roles()->attach($role_supervisor);
 
         $agent = new User();
-        $agent->name = 'Agent';
-        $agent->email = 'agent@eazyhoppers.com';
+        $agent->name = 'UserAG';
+        $agent->email = 'user_ag@eazyhoppers.com';
         $agent->password = bcrypt('password');
         $agent->save();
         $agent->roles()->attach($role_agent);
 
         $customer = new User();
-        $customer->name = 'Customer';
-        $customer->email = 'customer@eazyhoppers.com';
+        $customer->name = 'UserC';
+        $customer->email = 'user_c@eazyhoppers.com';
         $customer->password = bcrypt('password');
         $customer->save();
         $customer->roles()->attach($role_customer);

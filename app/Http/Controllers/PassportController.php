@@ -97,4 +97,6 @@ class PassportController extends Controller
         }
         return response()->json(['status' => false,'message' => 'No user found'], 200);
     }
+
+    
 }
