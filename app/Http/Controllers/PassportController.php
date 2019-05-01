@@ -6,6 +6,7 @@ use App\User;
 use App\Role;
 use Illuminate\Http\Request;
 use Session;
+use Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PassportController extends Controller
@@ -69,10 +70,12 @@ class PassportController extends Controller
         ];
  
         if (auth()->attempt($credentials)) {
+            $user = Auth::user();
+            $user_role = $user->roles->first()->name;
             $token = auth()->user()->createToken($request->email)->accessToken;
-            return response()->json(['status' => true, 'message'=> 'Login successful','token' => $token, ], 200);
+            return response()->json(['status' => true, 'message'=> 'Login successful','token' => $token, 'Role' => $user_role ], 200);
         } else {
-            return response()->json(['status' => false, 'message' => 'UnAuthorised',''], 401);
+            return response()->json(['status' => false, 'message' => 'UnAuthorised'], 401);
         }
     }
  

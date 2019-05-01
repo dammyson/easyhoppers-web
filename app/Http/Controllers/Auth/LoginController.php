@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use Auth;
+use Carbon\Carbon;
 class LoginController extends Controller
 {
     /*
@@ -41,7 +42,11 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-     return redirect('/home');
+        echo "ajkdsakk";
+        $user = Auth::user();
+        $user->updated_at = Carbon::now();
+        $user->save();
+        return redirect('/home');
     }
 
     public function logout(Request $request)

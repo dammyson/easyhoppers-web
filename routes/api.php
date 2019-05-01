@@ -41,4 +41,6 @@ Route::middleware('auth:api')->group(function () {
    Route::post('schedule/delayedFlightByDate', 'API\ScheduleController@delayedFlightByDate');
    Route::post('schedule/delayedFlightByDateAndTime', 'API\ScheduleController@delayedFlightByDateAndTime');
 
+   Route::post('/subscribe', 'API\OperationController@subscribe');
+
 });

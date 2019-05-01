@@ -34,6 +34,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
+                      <th>Id</th>
                       <th>Name</th>
                       <th>Airline Code</th>
                       <th>RouteID</th>
@@ -42,7 +43,8 @@
                   </thead>
                   <tfoot>
                     <tr>
-                    <th>Name</th>
+                      <th>Id</th>
+                      <th>Name</th>
                       <th>Airline Code</th>
                       <th>RouteID</th>
                       <th>Last Modified</th>
@@ -51,6 +53,7 @@
                   <tbody>
                       @foreach($schedules as $schedule)
                       <tr>
+                        <td>{{$schedule->id}}</td>
                         <td>{{$schedule->schedule_name}}</td>
                         <td>{{$schedule->airlineCode}}</td>
                         <td>{{$schedule->route_id}}</td>

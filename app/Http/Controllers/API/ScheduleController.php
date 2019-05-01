@@ -331,31 +331,39 @@ class ScheduleController extends Controller
             }
             $schedule->route_id =  $request->route_id;
         }
-        if(array_key_exists('actual_departure_time', $msg_array)) {
-            $type = "actual_departure_time";
-            $schedule->actual_departure_time =  $request->actual_departure_time;
-        }
-        if(array_key_exists('actual_departure_date', $msg_array)) {
-            $type = "actual_departure_date";
-            $schedule->actual_departure_date =  $request->actual_arrival_date;
-        }
-        if(array_key_exists('actual_arrival_date', $msg_array)) {
-            $type = "actual_arrival_date";
-            $schedule->actual_arrival_date =  $request->actual_arrival_date;
-        }
-        if(array_key_exists('actual_arrival_time', $msg_array)) {
-            $type = "actual_arrival_time";
-            $schedule->actual_arrival_time =  $request->actual_arrival_time;
-        }
-        if(array_key_exists('status', $msg_array)) {
-            $type = "status";
-            $schedule->status =  $request->status;
+
+        $input_count = $request->all()->count();
+        while($input_count > 1){
+
+            if(array_key_exists('actual_departure_time', $msg_array)) {
+                $type = "actual_departure_time";
+                $schedule->actual_departure_time =  $request->actual_departure_time;
+            }
+            if(array_key_exists('actual_departure_date', $msg_array)) {
+                $type = "actual_departure_date";
+                $schedule->actual_departure_date =  $request->actual_arrival_date;
+            }
+            if(array_key_exists('actual_arrival_date', $msg_array)) {
+                $type = "actual_arrival_date";
+                $schedule->actual_arrival_date =  $request->actual_arrival_date;
+            }
+            if(array_key_exists('actual_arrival_time', $msg_array)) {
+                $type = "actual_arrival_time";
+                $schedule->actual_arrival_time =  $request->actual_arrival_time;
+            }
+            if(array_key_exists('status', $msg_array)) {
+                $type = "status";
+                $schedule->status =  $request->status;
+            }
+            
+            $input_count--;
         }
 
         if($schedule->save()){
             event(new ScheduleChanged($schedule, $type));
             return response()->json(['message' => 'Successful','status' => true ], 200);
         }
+        return response()->json(['message' => 'Failed','status' => false ], 200);
     
         }catch(\Exception $e){
             return response()->json([
