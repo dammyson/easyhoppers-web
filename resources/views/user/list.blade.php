@@ -37,15 +37,21 @@
                       <th>Name</th>
                       <th>UniqueID</th>
                       <th>Email</th>
+                      <th>Role</th>
                       <th>Date Joined</th>
+                      <th>Last Activity</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tfoot>
                   <tr>
-                      <th>Name</th>
+                  <th>Name</th>
                       <th>UniqueID</th>
                       <th>Email</th>
+                      <th>Role</th>
                       <th>Date Joined</th>
+                      <th>Last Activity</th>
+                      <th>Status</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -54,7 +60,16 @@
                           <td>{{$user->name}}</td>
                           <td>{{$user->unique_id}}</td>
                           <td>{{$user->email}}</td>
+                          <td>{{$user->role}}</td>
                           <td>{{$user->created_at}}</td>
+                          <td>{{$user->updated_at}}</td>
+                          <td>
+                            @if((Carbon\Carbon::now()->diffInHours($user->updated_at) > 48))
+                              <span class="badge badge-danger">Inactive</span>
+                            @else
+                              <span class="badge badge-success">Active</span>
+                            @endif
+                          </td>
                       </tr>
                       @endforeach
                    

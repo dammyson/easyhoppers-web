@@ -33,7 +33,7 @@
 
                 <div class="card shadow mb-6">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Create New</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Upload Agents</h6>
                     </div>
                
                     <div class="card-body">

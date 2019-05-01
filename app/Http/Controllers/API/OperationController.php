@@ -10,6 +10,9 @@ class OperationController extends Controller
 {
     //
     public function subscribe(Request $request){
+        // $sus = $request->user();
+        // return response()->json(['message' => $sus, 'status' => false ], 200);
+
         $validator = \Validator::make($request->all(), [
             'email' => 'required',
             'schedule_id' => 'required',

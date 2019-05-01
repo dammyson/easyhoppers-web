@@ -42,7 +42,7 @@ class HomeController extends Controller
     }
 
     public function list(){
-        $users = User::all();
+        $users = DB::select('select a.id, a.name, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
         return view('user.list',['users'=>$users]);
     }
 
@@ -101,7 +101,7 @@ class HomeController extends Controller
                                     $user = User::where('email', $insert['email']);
                                     $user->roles()->attach($role_agent);
                                     Session::flash('success', 'Your Data has successfully imported');
-                                    $users = User::all();
+                                    $users = DB::select('select a.id, a.name, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
                                     return view('user.list',['users'=>$users]);
                                 }else {                        
                                     Session::flash('error', 'Error inserting the data..');

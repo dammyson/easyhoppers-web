@@ -46,6 +46,11 @@
         <a class="nav-link" href="charts.html">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Reports</span></a>
+          <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="utilities-color.html">Total Users</a>
+          </div>
+        </div>
       </li>
 
       <!-- Nav Item - Utilities Collapse Menu -->
