@@ -52,7 +52,8 @@ class AirPortController extends Controller
         $airline = Airport::create(['name' => $request->name, 'code' => $request->code,'description' => $request->description]);
         Session::flash('success', 'Airport added successfully !!!');
 
-        return view('airport.index');
+        $airports = Airport::all();
+        return view('airport.index',['airports'=>$airports]);
     }
 
     /**

@@ -19,9 +19,9 @@ Route::group(['middleware' => ['web','auth']], function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::get('/airport/list', 'AirportController@index');
-    Route::get('/airport/create', 'AirportController@create');
-    Route::post('/airport/create', 'AirportController@store')->name('addPort');
+    Route::get('/airport/list', 'AirPortController@index');
+    Route::get('/airport/create', 'AirPortController@create');
+    Route::post('/airport/create', 'AirPortController@store')->name('addPort');
 
     Route::get('/airline/list', 'AirlineController@index');
     Route::get('/airline/create', 'AirlineController@create');

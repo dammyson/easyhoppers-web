@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::all();
-        $users->where('updated_at', '>', );
+        //$users->where('updated_at', '>', );
         return view('home');
     }
 
