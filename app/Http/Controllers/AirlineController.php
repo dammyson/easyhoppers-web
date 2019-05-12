@@ -52,7 +52,8 @@ class AirlineController extends Controller
         $airline = Airline::create(['name' => $request->name, 'code' => $request->code,'description' => $request->description]);
         Session::flash('success', 'Airline added successfully !!!');
 
-        return view('airline.index');
+        $airlines = Airline::all();
+       return view('airline.index',['airlines'=>$airlines]);
     }
 
     /**

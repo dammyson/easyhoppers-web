@@ -1,6 +1,6 @@
 <?php
 
-use App\Airport;
+use App\AirPort;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -13,7 +13,7 @@ class AirportTableSeeder extends Seeder
      */
     public function run()
     {
-        $airport = new Airport();
+        $airport = new AirPort();
         $airport->name = 'Murtala Muhammed Airport';
         $airport->description = 'Murtala Muhammed Airport ';
         $airport->code = 'LOS';
@@ -21,7 +21,7 @@ class AirportTableSeeder extends Seeder
         $airport->updated_at = Carbon::now()->format('Y-m-d H:i:s');
         $airport->save();   
         
-        $airport = new Airport();
+        $airport = new AirPort();
         $airport->name = 'Nnamdi Azikiwe International Airport';
         $airport->description = 'Nnamdi Azikiwe International Airport ';
         $airport->code = 'ABV';
@@ -29,7 +29,7 @@ class AirportTableSeeder extends Seeder
         $airport->updated_at = Carbon::now()->format('Y-m-d H:i:s');
         $airport->save();  
          
-        $airport = new Airport();
+        $airport = new AirPort();
         $airport->name = 'Port Harcourt Airport';
         $airport->description = 'Port Harcourt Airport';
         $airport->code = 'PHC';
