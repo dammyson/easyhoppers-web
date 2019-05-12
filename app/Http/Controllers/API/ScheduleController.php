@@ -18,15 +18,20 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $now = Carbon::now();
-        $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
-        $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
-        $schedules = DB::select("select al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
-        if($schedules){
-            if(count($schedules) > 0){
-                return response()->json(['status' => true, 'message' => 'successful', 'data'=> $schedules ], 200);
+        try{
+            $now = Carbon::now();
+            $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
+            $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
+            $schedules = DB::select("select al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
+            if($schedules){
+                if(count($schedules) > 0){
+                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $schedules ], 200);
+                }
+                return response()->json([ 'status' => false,'message' => 'No records found'], 200);
             }
-            return response()->json([ 'status' => false,'message' => 'No records found'], 200);
+            return response()->json([ 'status' => false,'message' => 'No schedules for this week'], 200);
+        }catch(\Exception $ex){
+            return response()->json([ 'status' => false,'message' => $ex->getMessage()], 200);
         }
     }
 
@@ -62,7 +67,7 @@ class ScheduleController extends Controller
 
     public function departurePerformanceByDateAndTime(Request $request){
         $validator = \Validator::make($request->all(), [
-            'route' => 'required_without:airline',
+            'route_id' => 'required_without:airline',
             'airline' => 'required_without:route',
         ]);
         $error = $validator->errors()->first();

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Schedule;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class OperationController extends Controller
 {
@@ -26,7 +29,7 @@ class OperationController extends Controller
 
             $str_arr = explode (",", $user->subscription);
             
-            if(array_key_exists('subscription', $request->schedule_id)) {
+            if(array_key_exists($request->schedule_id, $str_arr)) {
                 return response()->json(['message' => 'User already subscribed','status' => false ], 200);
             }
 
@@ -55,7 +58,7 @@ class OperationController extends Controller
         $percentageCancellations = self::percentageCancellations( $schedule );
         $percentageDelayed = self::percentageDelayed( $schedule );
 
-        return response()->json(['data' => [ $percentageArrivals,$percentageDepartures, $percentageDelayed, $percentageCancellations ], 'status' => true ], 200);
+        return response()->json(['percentageArrivals' =>  $percentageArrivals,'percentageDepartures' =>  $percentageDepartures, 'percentageDelayed' => $percentageDelayed,'percentageCancellations' =>  $percentageCancellations , 'status' => true ], 200);
 
     }
 
@@ -69,7 +72,10 @@ class OperationController extends Controller
                 $noOfArrivalsOnTime++;
             }
         }
-        $percentageArrivals = ($noOfArrivalsOnTime / $totalArrivedSchedule) * 100;
+        if($totalArrivedSchedule == 0 ){
+            return 0;
+        }
+        return $percentageArrivals = ($noOfArrivalsOnTime / $totalArrivedSchedule) * 100;
     }
 
     public function percentageDepartures($schedule){
@@ -82,15 +88,20 @@ class OperationController extends Controller
                 $noOfDeparturesOnTime++;
             }
         }
-        $percentageDepartures = ($noOfDeparturesOnTime / $totalDepartureSchedule) * 100;
+        if($totalDepartureSchedule == 0 ){
+            return 0;
+        }
+        return $percentageDepartures = ($noOfDeparturesOnTime / $totalDepartureSchedule) * 100;
     }
 
     public function percentageCancellations($schedule){
         
         $totalArrivedSchedule = $schedule->count();
         $totalcancelledSchedules = $schedule->where('status','3')->count();
-        
-        $percentageCancellations = ($totalcancelledSchedules / $totalArrivedSchedule) * 100;
+        if($totalArrivedSchedule == 0 ){
+            return 0;
+        }
+        return $percentageCancellations = ($totalcancelledSchedules / $totalArrivedSchedule) * 100;
     }
 
     public function percentageDelayed($schedule){
@@ -103,6 +114,47 @@ class OperationController extends Controller
                 $noOfArrivalsOnTime++;
             }
         }
-        $percentageArrivals = ($noOfArrivalsOnTime / $totalArrivedSchedule) * 100;
+        if($totalArrivedSchedule == 0 ){
+            return 0;
+        }
+        return $percentageArrivals = ($noOfArrivalsOnTime / $totalArrivedSchedule) * 100;
+    }
+
+    public function genericPerformance(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'airlineCode' => 'required',
+            'route_id' => 'required',
+            'status' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+        //initialize time variables
+        $now = Carbon::now();
+        $startDate = $now->startOfWeek()->format('Y-m-d H:i');
+        $endDate = $now->endOfWeek()->format('Y-m-d H:i');
+        $startTime = "00:00";
+        $endTime = "23:59";
+
+        $schedules = DB::select("select al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$startDate' and '$endDate' and scheduled_departure_time between '$startTime' and '$endTime' and status = '$request->status' and route_id = '$request->route_id'  and airlineCode = '$request->airlineCode' "); 
+
+        if($schedules && count($schedules) > 0){
+            return response()->json(['status' => true, 'message' => 'successful', 'data'=> $schedules ], 200);
+        }
+        return response()->json([ 'status' => false,'message' => 'No records found'], 200);
+    }  
+    
+    public function routesByAirline(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'airlineCode' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+
+        Schedule::where('airline',)->get();
+
     }
 }

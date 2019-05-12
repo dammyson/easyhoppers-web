@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
             $table->string('unique_id')->nullable();
+            $table->string('terminal')->nullable();
             $table->string('subscription')->nullable();
             $table->decimal('balance',8,2)->default('0');
             $table->tinyInteger('status')->default('0');

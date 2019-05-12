@@ -132,7 +132,7 @@
             <!-- <h6 class="collapse-header">Login Screens:</h6> -->
             <a class="collapse-item" href="/user/new">Add New</a>
             <a class="collapse-item" href="/users/list">View</a>
-            <a class="collapse-item" href="#">Reset Password</a>
+            <!-- <a class="collapse-item" href="#">Reset Password</a> -->
             <!-- <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>
             <a class="collapse-item" href="404.html">404 Page</a>
