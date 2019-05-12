@@ -49,10 +49,10 @@ class AirPortController extends Controller
             return back();
         }
 
-        $airline = Airport::create(['name' => $request->name, 'code' => $request->code,'description' => $request->description]);
+        $airline = AirPort::create(['name' => $request->name, 'code' => $request->code,'description' => $request->description]);
         Session::flash('success', 'Airport added successfully !!!');
 
-        $airports = Airport::all();
+        $airports = AirPort::all();
         return view('airport.index',['airports'=>$airports]);
     }
 
@@ -103,7 +103,7 @@ class AirPortController extends Controller
 
     //abeg i no fit create another controller just to list airport cuz say na API i go just chuk am inside here
     public function list(){
-        $airport = Airport::all();
+        $airport = AirPort::all();
         return response()->json(['message' => $airport, 'status' => true ], 200);
     }
 }
