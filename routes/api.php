@@ -28,7 +28,7 @@ Route::middleware('auth:api')->group(function () {
 
    Route::get('routes', 'RouteController@list');
    Route::get('airlines', 'AirlineController@list');
-   Route::get('airports', 'AirportController@list');
+   Route::get('airports', 'AirPortController@list');
 
    Route::get('schedules', 'API\ScheduleController@index');
    Route::put('schedule/update/{id}', 'API\ScheduleController@update');

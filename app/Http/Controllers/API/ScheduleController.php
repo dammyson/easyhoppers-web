@@ -22,7 +22,7 @@ class ScheduleController extends Controller
             $now = Carbon::now();
             $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
             $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
-            $schedules = DB::select("select al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
+            $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
             if($schedules){
                 if(count($schedules) > 0){
                     return response()->json(['status' => true, 'message' => 'successful', 'data'=> $schedules ], 200);

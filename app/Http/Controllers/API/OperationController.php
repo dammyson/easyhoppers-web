@@ -154,7 +154,7 @@ class OperationController extends Controller
             return response()->json(['message' => $error, 'status' => false ], 200);
         }
 
-        Schedule::where('airline',)->get();
+       // Schedule::where('airline',)->get();
 
     }
 }
