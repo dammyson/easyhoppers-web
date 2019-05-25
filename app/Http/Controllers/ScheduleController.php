@@ -23,6 +23,12 @@ class ScheduleController extends Controller
         return view('schedule.index',['schedules'=>$schedules]);
     }
 
+    public function schedule_list(){
+        $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id order by s.scheduled_departure_date desc ");
+
+        return view('schedule.listing',['schedules'=>$schedules]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -46,4 +46,5 @@ Route::middleware('auth:api')->group(function () {
    Route::post('/performanceAggregation', 'API\OperationController@performanceAggregation');
    Route::post('/genericPerformance', 'API\OperationController@genericPerformance');
 
+   Route::get('/getSchedule/{id}', 'API\ScheduleController@get');
 });

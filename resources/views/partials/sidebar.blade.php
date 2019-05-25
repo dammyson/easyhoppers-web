@@ -43,12 +43,14 @@
 
        <!-- Nav Item - Charts -->
        <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports" aria-expanded="true" aria-controls="collapseReports">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>Reports</span></a>
-          <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <span>Reports</span>
+        </a>
+          <div id="collapseReports" class="collapse" aria-labelledby="collapseReports" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="utilities-color.html">Total Users</a>
+            <a class="collapse-item" href="/users/list">Total Users</a>
+            <a class="collapse-item" href="/schedule/listing">Schedule Listing</a>
           </div>
         </div>
       </li>

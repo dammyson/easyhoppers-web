@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Schedule;
 use App\Events\ScheduleChanged;
 use Carbon\Carbon;
+use App\User;
+use App\ViewModel\ScheduleVM;
 
 class ScheduleController extends Controller
 {
@@ -18,6 +20,9 @@ class ScheduleController extends Controller
      */
     public function index()
     {
+        $authUser = \Auth::user();
+        $items = array();
+        $isSubscribed = false;
         try{
             $now = Carbon::now();
             $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
@@ -25,13 +30,50 @@ class ScheduleController extends Controller
             $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
             if($schedules){
                 if(count($schedules) > 0){
-                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $schedules ], 200);
+                    foreach ($schedules as $key => $schedule) {
+                        $user = User::where('email',$authUser->email)->first();
+                        //return response()->json(['status' => true, 'message' => 'successful', 'data'=> $user ], 200);
+                        if($user->subscription != "" || $user->subscription != null){
+                            $subscription_arr = explode (",", $user->subscription);
+                            if(in_array($schedule->id, $subscription_arr)){
+                                $isSubscribed = true;
+                            }
+                        }
+                        $iSchedule = new ScheduleVM();
+                        $iSchedule->id = $schedule->id;
+                        $iSchedule->name = $schedule->name;
+                        $iSchedule->description = $schedule->id;
+                        $iSchedule->scheduled_departure_time = $schedule->scheduled_departure_time;
+                        $iSchedule->scheduled_arrival_time = $schedule->scheduled_arrival_time;
+                        $iSchedule->departure_port = $schedule->departure_port;
+                        $iSchedule->arrival_port = $schedule->arrival_port;
+                        $iSchedule->status = $schedule->status;
+                        $iSchedule->scheduled_departure_date = $schedule->scheduled_departure_date;
+                        $iSchedule->scheduled_arrival_date = $schedule->scheduled_arrival_date;
+                        $iSchedule->isSubscribed = $isSubscribed;
+                        array_push($items,$iSchedule);
+                        //$items->push($iSchedule);
+                    }
+                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $items ], 200);
                 }
                 return response()->json([ 'status' => false,'message' => 'No records found'], 200);
             }
             return response()->json([ 'status' => false,'message' => 'No schedules for this week'], 200);
         }catch(\Exception $ex){
             return response()->json([ 'status' => false,'message' => $ex->getMessage()], 200);
+        }
+    }
+
+    public function get($id)
+    {
+        if($id == ""){
+            return response()->json([ 'status' => false,'message' => "No Schedule Id"], 200);
+        }
+        $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.id = '$id' ");
+        if($schedules == null || count($schedules) < 1){
+            return response()->json([ 'status' => false,'message' => "No schedule found"], 200);
+        }else{
+            return response()->json([ 'status' => true,'message' => $schedules], 200);
         }
     }
 
@@ -337,7 +379,7 @@ class ScheduleController extends Controller
             $schedule->route_id =  $request->route_id;
         }
 
-        $input_count = $request->all()->count();
+        $input_count = count($request->all());
         while($input_count > 1){
 
             if(array_key_exists('actual_departure_time', $msg_array)) {
