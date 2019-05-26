@@ -8,6 +8,7 @@ use App\User;
 use App\Schedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\ViewModel\ScheduleVM;
 
 class OperationController extends Controller
 {
@@ -43,22 +44,59 @@ class OperationController extends Controller
     }
 
     public function performanceAggregation(Request $request){
-        $validator = \Validator::make($request->all(), [
-            'route_id' => 'required',
-            'airlineCode' => 'required',
-        ]);
-        $error = $validator->errors()->first();
-        if ($validator->fails()) {
-            return response()->json(['message' => $error, 'status' => false ], 200);
-        }
-        
-        $schedule = Schedule::where('route_id',$request->route_id)->where('airlineCode',$request->airline)->get();
-        $percentageArrivals = self::percentageArrivals( $schedule );
-        $percentageDepartures = self::percentageDepartures( $schedule );
-        $percentageCancellations = self::percentageCancellations( $schedule );
-        $percentageDelayed = self::percentageDelayed( $schedule );
 
-        return response()->json(['percentageArrivals' =>  $percentageArrivals,'percentageDepartures' =>  $percentageDepartures, 'percentageDelayed' => $percentageDelayed,'percentageCancellations' =>  $percentageCancellations , 'status' => true ], 200);
+        $items = array();
+        $now = Carbon::now();
+        $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
+        $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
+        $itt = 0;
+        //$schedules = Schedule::whereBetween('scheduled_departure_date',[$weekStartDate, $weekEndDate])->get();
+        $schGrps = DB::select("select airlineCode, route_id FROM schedules s  where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' group by airlineCode, route_id "); 
+        
+        foreach ($schGrps as $key => $schGrp) {
+            
+           
+            $schedules = Schedule::where('route_id',$schGrp->route_id)->where('airlineCode',$schGrp->airlineCode)->get();
+            if($schedules){
+
+                    $percentageArrivals = self::percentageArrivals( $schedules );
+                    $percentageDepartures = self::percentageDepartures( $schedules );
+                    $percentageCancellations = self::percentageCancellations( $schedules );
+                    $percentageDelayed = self::percentageDelayed( $schedules );
+                    
+                   
+                    $firstSchedule = $schedules->first();
+                   
+                    $flightObj =  new ScheduleVM();
+                    $flightObj->percentageArrivals = $percentageArrivals;
+                    $flightObj->percentageDepartures = $percentageDepartures;
+                    $flightObj->percentageCancellations = $percentageCancellations;
+                    $flightObj->percentageDelayed = $percentageDelayed;
+                    $flightObj->description = $firstSchedule['description'];
+                    $flightObj->flight = $firstSchedule['airlineCode'];
+                    $flightObj->airlineId = $firstSchedule['airlineCode'];
+                    $flightObj->routeId = $firstSchedule['route_id'];
+                    $flightObj->route = $firstSchedule['description'];
+                    $flightObj->status = $firstSchedule['status'];
+                   
+                    array_push($items,$flightObj);
+            }
+
+        }
+        return response()->json([ 'status' => true,'message' => 'Successful', 'data' => $items], 200);
+
+       
+
+
+
+
+        // $schedule = Schedule::where('route_id',$request->route_id)->where('airlineCode',$request->airline)->get();
+        // $percentageArrivals = self::percentageArrivals( $schedule );
+        // $percentageDepartures = self::percentageDepartures( $schedule );
+        // $percentageCancellations = self::percentageCancellations( $schedule );
+        // $percentageDelayed = self::percentageDelayed( $schedule );
+
+        // return response()->json(['percentageArrivals' =>  $percentageArrivals,'percentageDepartures' =>  $percentageDepartures, 'percentageDelayed' => $percentageDelayed,'percentageCancellations' =>  $percentageCancellations , 'status' => true ], 200);
 
     }
 
@@ -66,6 +104,9 @@ class OperationController extends Controller
         
         $totalArrivedSchedule = $schedule->count();
         $noOfArrivalsOnTime = 0;
+
+
+        
         foreach ($schedule as $key => $value) {
             $diff_in_minutes = $value->scheduled_arrival_time->diffInMinutes($value->actual_arrival_time);
             if(($value->scheduled_arrival_time->diffInMinutes($value->actual_arrival_time)<5)){
