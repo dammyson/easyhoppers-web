@@ -69,7 +69,25 @@
                         <td>{{$schedule->arrival_port}}</td>
                         <td>{{$schedule->scheduled_arrival_date}}</td>
                         <td>{{$schedule->scheduled_arrival_time}}</td>
-                        <td>{{$schedule->status}}</td>
+                        <td>
+                            @if($schedule->status == 0)
+                              <span class="badge badge-info">Scheduled</span>
+                            @elseif($schedule->status == 1)
+                              <span class="badge badge-success">On Ground</span>
+                            @elseif($schedule->status == 2)
+                              <span class="badge badge-success">Air Born</span>
+                            @elseif($schedule->status == 3)
+                              <span class="badge badge-warning">Delayed</span>
+                            @elseif($schedule->status == 4)
+                              <span class="badge badge-success">Taxiing</span>
+                            @elseif($schedule->status == 5)
+                              <span class="badge badge-success">Boarding</span>
+                            @elseif($schedule->status == 6)
+                              <span class="badge badge-danger">Cancelled</span>
+                            @elseif($schedule->status == 7)
+                              <span class="badge badge-warning">Rescheduled</span>
+                            @endif
+                        </td>
                       </tr>
                       @endforeach
                   </tbody>

@@ -20,7 +20,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $authUser = \Auth::user();
+        $authUser = auth()->user();
         $items = array();
         $isSubscribed = false;
         try{

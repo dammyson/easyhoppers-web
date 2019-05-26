@@ -42,7 +42,8 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        echo "ajkdsakk";
+        //echo "ajkdsakk";
+        //dd($user);
         $user = Auth::user();
         $user->updated_at = Carbon::now();
         $user->save();

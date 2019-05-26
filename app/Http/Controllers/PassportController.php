@@ -73,6 +73,8 @@ class PassportController extends Controller
             $user = Auth::user();
             $user_role = $user->roles->first()->name;
             $token = auth()->user()->createToken($request->email)->accessToken;
+            $user->updated_at = \Carbon\Carbon::now();
+            $user->save();
             return response()->json(['status' => true, 'message'=> 'Login successful','token' => $token, 'Role' => $user_role ], 200);
         } else {
             return response()->json(['status' => false, 'message' => 'UnAuthorised'], 401);
@@ -99,6 +101,52 @@ class PassportController extends Controller
             return response()->json(['status' => true,'message'=> 'Successful','users' => $users], 200);
         }
         return response()->json(['status' => false,'message' => 'No user found'], 200);
+    }
+
+    public function getSchedules()
+    {
+        $authUser = auth()->user();
+        $items = array();
+        $isSubscribed = false;
+        try{
+            $now = \Carbon\Carbon::now();
+            $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
+            $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
+            $schedules = \DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
+            if($schedules){
+                if(count($schedules) > 0){
+                    foreach ($schedules as $key => $schedule) {
+                        $user = User::where('email',$authUser->email)->first();
+                        //return response()->json(['status' => true, 'message' => 'successful', 'data'=> $user ], 200);
+                        if($user->subscription != "" || $user->subscription != null){
+                            $subscription_arr = explode (",", $user->subscription);
+                            if(in_array($schedule->id, $subscription_arr)){
+                                $isSubscribed = true;
+                            }
+                        }
+                        $iSchedule = new \stdClass;
+                        $iSchedule->id = $schedule->id;
+                        $iSchedule->name = $schedule->name;
+                        $iSchedule->description = $schedule->id;
+                        $iSchedule->scheduled_departure_time = $schedule->scheduled_departure_time;
+                        $iSchedule->scheduled_arrival_time = $schedule->scheduled_arrival_time;
+                        $iSchedule->departure_port = $schedule->departure_port;
+                        $iSchedule->arrival_port = $schedule->arrival_port;
+                        $iSchedule->status = $schedule->status;
+                        $iSchedule->scheduled_departure_date = $schedule->scheduled_departure_date;
+                        $iSchedule->scheduled_arrival_date = $schedule->scheduled_arrival_date;
+                        $iSchedule->isSubscribed = $isSubscribed;
+                        array_push($items,$iSchedule);
+                        //$items->push($iSchedule);
+                    }
+                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $items ], 200);
+                }
+                return response()->json([ 'status' => false,'message' => 'No records found'], 200);
+            }
+            return response()->json([ 'status' => false,'message' => 'No schedules for this week'], 200);
+        }catch(\Exception $ex){
+            return response()->json([ 'status' => false,'message' => $ex->getMessage()], 200);
+        }
     }
 
     
