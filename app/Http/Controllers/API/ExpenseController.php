@@ -53,7 +53,9 @@ class ExpenseController extends Controller
 
         $expense = Expense::where('user_email',$authUser->email)->get();
         if($expense){
-            return response()->json(['message' => 'Successful','status' => true, 'data' => $expense], 200);
+            if(count($expense)>0){
+                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense], 200);
+            }
         }
         return response()->json(['message' => 'No expense found','status' => false ], 200);
     }
