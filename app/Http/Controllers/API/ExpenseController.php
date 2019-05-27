@@ -4,8 +4,119 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Expense;
+use App\ExpenseDetail;
+use App\User;
+use Illuminate\Support\Carbon;
 
 class ExpenseController extends Controller
 {
-    //
+     //
+    public function create_expense(Request $request){
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'budget' => 'required',
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+        try{
+            $authUser = auth()->user();
+            $authEmail = $authUser->email;
+            $userCheck = Expense::where('user_email',$authEmail)->where('status',0)->first();
+            if($userCheck){
+                return response()->json(['message' => 'Please close current expense','status' => false ], 200);
+            }
+
+            $user = new Expense();
+            $user->name = $request->name;
+            $user->budget = $request->budget;
+            $user->amount_spent = 0;
+            $user->user_email = $authEmail;
+            $user->start_date = Carbon::now();
+
+            if( $user->save()){
+                return response()->json(['message' => 'Successful','status' => true ], 200);
+            }else{
+                return response()->json(['message' => 'Could not save records','status' => false ], 200);
+            }
+        }catch(\Exception $ex){
+            return response()->json(['message' => $ex->getMessage(),'status' => false ], 200);
+        }
+    }
+
+    public function all_expense(){
+        $authUser = auth()->user();
+
+        $expense = Expense::where('user_email',$authUser->email)->get();
+        if($expense){
+            return response()->json(['message' => 'Successful','status' => true, 'data' => $expense], 200);
+        }
+        return response()->json(['message' => 'No expense found','status' => false ], 200);
+    }
+
+    public function expense_details($id){
+        $expense = ExpenseDetail::where('expense_id',$id)->get();
+        if($expense){
+            if(count($expense)>0){
+                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense], 200);
+            }
+            return response()->json(['message' => 'No expense found','status' => false], 200);
+        }
+        return response()->json(['message' => 'No expense found','status' => false ], 200);
+    }
+
+    public function add_expense_details(Request $request){
+
+        $validator = \Validator::make($request->all(), [
+            'category' => 'required',
+            'amount' => 'required',
+            'description' => 'required',
+            'expense_id' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+        try{
+
+            $expCheck = Expense::where('id',$request->expense_id)->first();
+            if(!$expCheck){
+                return response()->json(['message' => 'No expense found','status' => false ], 200);
+            }
+            if($expCheck->status != '0'){
+                return response()->json(['message' => 'Expense has been closed','status' => false ], 200);
+            }
+
+            $expense_details = new ExpenseDetail();
+            $expense_details->category = $request->category;
+            $expense_details->amount = $request->amount;
+            $expense_details->description = $request->description;
+            $expense_details->expense_id = $request->expense_id;
+
+            if( $expense_details->save()){
+                return response()->json(['message' => 'Successful','status' => true ], 200);
+            }else{
+                return response()->json(['message' => 'Could not save records','status' => false ], 200);
+            }
+        }catch(\Exception $ex){
+            return response()->json(['message' => $ex->getMessage(),'status' => false ], 200);
+        }
+    }
+
+    public function close_expense($id){
+        $expense = Expense::where('id',$id)->first();
+        if($expense){
+            $expense->status = '1';
+            $expense->end_date = Carbon::now();
+            if($expense->save()){
+                return response()->json(['message' => 'Successful','status' => true], 200);
+            }
+            return response()->json(['message' => 'Could not save','status' => false], 200);
+        }
+        return response()->json(['message' => 'No expense found','status' => false ], 200);
+    }
 }

@@ -48,4 +48,12 @@ Route::middleware('auth:api')->group(function () {
    Route::post('/genericPerformance', 'API\OperationController@genericPerformance');
 
    Route::get('/getSchedule/{id}', 'API\ScheduleController@get');
+
+
+
+   Route::post('/expense/create', 'API\ExpenseController@create_expense');
+   Route::get('/expense', 'API\ExpenseController@all_expense');
+   Route::get('/expense/{id}', 'API\ExpenseController@expense_details');
+   Route::post('/expense/add/details', 'API\ExpenseController@add_expense_details');
+   Route::get('/expense/close/{id}', 'API\ExpenseController@close_expense');
 });
