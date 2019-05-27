@@ -68,8 +68,32 @@ class HomeController extends Controller
     }
 
     public function list(){
-        $users = DB::select('select a.id, a.name, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
-        return view('user.list',['users'=>$users]);
+        $now = Carbon::now();
+        $activeUsers=0;
+        $inactiveUsers=0;
+        $activeAgents=0;
+        $inactiveAgents=0;
+        $users = User::whereHas('roles', function ($query) { $query->where('name', '=', 'customer');})->get();
+        $agents = User::whereHas('roles', function ($query) { $query->where('name', '=', 'agent');})->get();
+        $totalUsers = $users->count();
+        $totalAgents = $agents->count();
+        foreach($users as $user){
+            if(( $user->updated_at->diff($now)->h <5) ){
+                $activeUsers++;
+            }else{
+                $inactiveUsers++;
+            }
+        }
+
+        foreach($agents as $agent){
+            if(( $agent->updated_at->diff($now)->h <5) ){
+                $activeAgents++;
+            }else{
+                $inactiveAgents++;
+            }
+        }
+        $users = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
+        return view('user.list',['users'=>$users, 'totalUsers'=>$totalUsers,'totalAgents'=>$totalAgents,'activeUsers'=>$activeUsers,'activeAgents'=>$activeAgents,'inactiveUsers'=>$inactiveAgents,'activeUsers'=>$activeUsers, 'inactiveUsers'=>$inactiveUsers]);
     }
 
     public function create(){
@@ -109,6 +133,8 @@ class HomeController extends Controller
                                         'name' => $value->fullname,
                                         'email' => $value->email,
                                         'unique_id' => $value->phone,
+                                        'state' => $value->state,
+                                        'city' => $value->city,
                                         'terminal' => $value->terminal,
                                         'password' => $value->password,
                                         'status' => 0,

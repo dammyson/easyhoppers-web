@@ -19,11 +19,14 @@ class PassportController extends Controller
      */
     public function register(Request $request)
     {
-
+        $digits = 10;
+        $request->unique_id = rand(pow(10, $digits-1), pow(10, $digits)-1);
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
+            'location' => 'required|min:3',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'unique_id' => 'required|unique:users'
         ]);
             
         $error = $validator->errors()->first();
@@ -39,6 +42,9 @@ class PassportController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'state' => $request->state,
+            'city' => $request->city,
+            'unique_id' => $request->unique_id,
             'password' => bcrypt($request->password)
         ]);
         
