@@ -61,10 +61,18 @@ class ExpenseController extends Controller
     }
 
     public function expense_details($id){
+        $items = array();
         $expense = ExpenseDetail::where('expense_id',$id)->get();
         if($expense){
             if(count($expense)>0){
-                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense], 200);
+                foreach ($expense as $key => $value) {
+                    $pieData = new ExpenseDetail();
+                    $pieData->category = $value->category;
+                    $pieData->amount = (int)$value->amount;
+
+                    array_push($items,$pieData);
+                }
+                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense, 'pie_data'=> $items], 200);
             }
             return response()->json(['message' => 'No expense found','status' => false], 200);
         }
