@@ -127,13 +127,13 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">
           <i class="fas fa-fw fa-user-cog"></i>
-          <span>User Administration</span>
+          <span>Agents Administration</span>
         </a>
         <div id="collapseUsers" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Login Screens:</h6> -->
             <a class="collapse-item" href="/user/new">Add New</a>
-            <a class="collapse-item" href="/users/list">View</a>
+            <!-- <a class="collapse-item" href="/users/list">View</a> -->
             <!-- <a class="collapse-item" href="#">Reset Password</a> -->
             <!-- <div class="collapse-divider"></div>
             <h6 class="collapse-header">Other Pages:</h6>

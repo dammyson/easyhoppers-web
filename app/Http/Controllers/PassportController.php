@@ -77,6 +77,13 @@ class PassportController extends Controller
  
         if (auth()->attempt($credentials)) {
             $user = Auth::user();
+            if($user->status != 0){
+                if($user->status == 1){
+                    return response()->json(['status' => false, 'message' => 'Account suspended'], 401);
+                }else if($user->status == 2){
+                    return response()->json(['status' => false, 'message' => 'Account deactivated'], 401);
+                }
+            }
             $user_role = $user->roles->first()->name;
             $token = auth()->user()->createToken($request->email)->accessToken;
             $user->updated_at = \Carbon\Carbon::now();

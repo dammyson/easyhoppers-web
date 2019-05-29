@@ -38,9 +38,13 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('/schedule/listing', 'ScheduleController@schedule_list');
 
     Route::get('/profile', 'HomeController@profile');
-    Route::get('/users/list', 'HomeController@list');
+    Route::get('/user/details/{id}', 'HomeController@user_details');
+    Route::get('/users/list/{filter?}', 'HomeController@list')->name('userListing');
     Route::get('/user/new', 'HomeController@create');
     Route::post('/user/new', 'HomeController@store')->name('uploadUsers');
+    Route::post('/user/single/new', 'HomeController@save')->name('saveUser');
+    Route::get('/user/status/{user_id}/{status}', 'HomeController@change_agent_status');
+    Route::get('/user/delete/{id}', 'HomeController@delete_agent');
 });
 
 

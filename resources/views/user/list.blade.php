@@ -99,15 +99,15 @@
 
 <!--Filter Dropdown -->
 
-<form >
-<label> </label>
+<form method="get" action="/users/list/">
+<label></label>
 
-<select class="form-control col-md-2">
-  <option value=""selected disabled>::Select to filter::</option>
+<select class="form-control col-md-2" name="filter" style="display:inline-block;">
+  <option value=""selected disabled> ::Select to filter:: </option>
   <option value="Agents">Agents</option>
   <option value="Customers">Customers</option>
 </select>
-      
+      <input type="submit" value="Go" class="btn btn-success">
 </form>
 <br>
   <!-- DataTales Example -->
@@ -138,6 +138,7 @@
                       <th>Last Activity</th>
                       <th>Time Away <sup>Hrs</sup></th>
                       <th>Status</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -152,6 +153,7 @@
                       <th>Last Activity</th>
                       <th>Time Away <sup>Hrs</sup></th>
                       <th>Status</th>
+                      <th>Action</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -167,12 +169,25 @@
                           <td>{{$user->updated_at}}</td>
                           <td>{{Carbon\Carbon::now()->diffInHours($user->updated_at)}}</td>
                           <td>
-                            @if((Carbon\Carbon::now()->diffInHours($user->updated_at) > 48))
+                            @if((Carbon\Carbon::now()->diffInMinutes($user->updated_at) > 10) && $user->status == 0 && (Carbon\Carbon::now()->diffInHours($user->updated_at) < 5) && $user->role == 'agent')
+                              <span class="badge badge-warning">Idle</span>
+                            @elseif((Carbon\Carbon::now()->diffInHours($user->updated_at) >= 5) && $user->status == 0 && $user->role == 'agent')
                               <span class="badge badge-danger">Inactive</span>
-                            @else
+                            @elseif((Carbon\Carbon::now()->diffInHours($user->updated_at) > 1439) && $user->status == 0 && $user->role == 'customer')
+                              <span class="badge badge-info">Inactive</span>
+                            @elseif($user->status == 0)
                               <span class="badge badge-success">Active</span>
+                            @elseif($user->status == 1)
+                              <span class="badge badge-warning">Agent Suspended</span>
+                            @elseif($user->status == 2)
+                              <span class="badge badge-default">Agent Deactivated</span>
                             @endif
                           </td>
+                          <td>
+                          <button class="btn btn-sm btn-info" onclick="window.location='{{url("/user/details/$user->id")}}' ">View </button>
+                            
+                          </td>
+                         
                       </tr>
                       @endforeach
                    

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class HomeController extends Controller
 {
@@ -68,6 +69,8 @@ class HomeController extends Controller
     }
 
     public function list(){
+       
+        $filter = Input::get('filter', false);
         $now = Carbon::now();
         $activeUsers=0;
         $inactiveUsers=0;
@@ -92,7 +95,16 @@ class HomeController extends Controller
                 $inactiveAgents++;
             }
         }
-        $users = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
+        if($filter){
+            if($filter == 'Agents'){
+                $users = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id where c.name = \'agent\';');
+            }else{
+                $users = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id where c.name = \'customer\';');
+            }
+        }else{
+            $users = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id;');
+        }
+        
         return view('user.list',['users'=>$users, 'totalUsers'=>$totalUsers,'totalAgents'=>$totalAgents,'activeUsers'=>$activeUsers,'activeAgents'=>$activeAgents,'inactiveUsers'=>$inactiveAgents,'activeUsers'=>$activeUsers, 'inactiveUsers'=>$inactiveUsers]);
     }
 
@@ -187,5 +199,74 @@ class HomeController extends Controller
                 return view('user.create');
           }
         }
+    }
+
+    public function save(Request $request){
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|min:3',
+            'unique_id' => 'required|min:3',
+            'email' => 'required|email',
+            'state' => 'required',
+            'city' => 'required',
+            'terminal' => 'required'
+        ]);
+
+        $error = $validator->errors()->first();
+        if($validator->fails()){
+            Session::flash('error', $error);
+            return back();
+        }
+        $role_agent  = Role::where('name', 'agent')->first();
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->unique_id = $request->unique_id;
+        $user->email = $request->email;
+        $user->state = $request->state;
+        $user->city = $request->city;
+        $user->terminal = $request->terminal;
+        $user->status = 0;
+        $user->password = bcrypt($request->password);
+        $user->created_at = Carbon::now();
+        $user->updated_at = Carbon::now();
+
+        if($user->save()){
+            $user->roles()->attach($role_agent);
+            Session::flash('success', 'Agent added successfully !!!');
+            return back();
+        }else{
+            Session::flash('error', 'Could not add agent !!!');
+            return back();
+        }
+    }
+
+    public function user_details($id){
+        $user = DB::select('select a.id, a.name, a.state, a.city, a.unique_id, a.status, a.email, a.created_at, a.updated_at, c.name as role from users a left join role_user b on a.id = b.user_id left join roles c on b.role_id = c.id where a.id = '.$id.';');
+        $user = $user[0];
+        return view('user.details',['user'=>$user]);
+    }
+
+    public function change_agent_status($user_id, $status){
+        $user = User::find($user_id);
+        $user->status = $status;
+        if($user->save()){
+            Session::flash('success', 'Action completed !!!');
+            return redirect()->route('userListing');
+        }else{
+            Session::flash('error', 'Could not complete action !!!');
+            return redirect()->route('userListing');
+        }
+    }
+
+    public function delete_agent($id){
+        $user = User::find($id);
+       $user->delete();
+        
+        if(!User::find($id)){
+            return response()->json(['message' => 'User Deleted','status' => true ], 200);
+        }else{
+            return response()->json(['message' => 'Could not delete user','status' => false ], 200);
+        }
+
     }
 }

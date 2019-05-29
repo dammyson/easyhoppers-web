@@ -25,7 +25,7 @@
                 @if(Session::has('error'))
                 <div class="card bg-danger text-white shadow">
                     <div class="card-body">
-                      Oops!!
+                      Oops!!!
                       <div class="text-white-50 small">{{Session::get('error')}}</div>
                     </div>
                   </div>

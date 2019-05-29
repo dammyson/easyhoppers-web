@@ -31,15 +31,15 @@ class ExpenseController extends Controller
                 return response()->json(['message' => 'Please close current expense','status' => false ], 200);
             }
 
-            $user = new Expense();
-            $user->name = $request->name;
-            $user->budget = $request->budget;
-            $user->amount_spent = 0;
-            $user->user_email = $authEmail;
-            $user->start_date = Carbon::now();
+            $expense = new Expense();
+            $expense->name = $request->name;
+            $expense->budget = $request->budget;
+            $expense->amount_spent = 0;
+            $expense->user_email = $authEmail;
+            $expense->start_date = Carbon::now();
 
-            if( $user->save()){
-                return response()->json(['message' => 'Successful','status' => true ], 200);
+            if( $expense->save()){
+                return response()->json(['message' => 'Successful','status' => true, 'expense_id', $expense->id  ], 200);
             }else{
                 return response()->json(['message' => 'Could not save records','status' => false ], 200);
             }
