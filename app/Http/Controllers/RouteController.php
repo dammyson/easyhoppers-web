@@ -113,7 +113,7 @@ class RouteController extends Controller
 
     //abeg i no fit create another controller just to list routes cuz say na API i go just chuk am inside here
     public function list(){
-        $routes = Route::all();
+        $routes = Route::orderBy('code', 'asc')->get();
         return response()->json(['message' => $routes, 'status' => true ], 200);
     }
 }

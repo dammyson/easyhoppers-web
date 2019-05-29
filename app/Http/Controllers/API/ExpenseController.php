@@ -67,7 +67,7 @@ class ExpenseController extends Controller
             if(count($expense)>0){
                 foreach ($expense as $key => $value) {
                     $pieData = new ExpenseDetail();
-                    $pieData->category = $value->category;
+                    $pieData->name = $value->category;
                     $pieData->amount = (int)$value->amount;
 
                     array_push($items,$pieData);

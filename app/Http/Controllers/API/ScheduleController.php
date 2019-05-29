@@ -10,6 +10,8 @@ use App\Events\ScheduleChanged;
 use Carbon\Carbon;
 use App\User;
 use App\ViewModel\ScheduleVM;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Airline;
 
 class ScheduleController extends Controller
 {
@@ -27,7 +29,7 @@ class ScheduleController extends Controller
             $now = Carbon::now();
             $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
             $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
-            $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
+            $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
             if($schedules){
                 if(count($schedules) > 0){
                     foreach ($schedules as $key => $schedule) {
@@ -53,8 +55,11 @@ class ScheduleController extends Controller
                         $iSchedule->isSubscribed = $isSubscribed;
                         array_push($items,$iSchedule);
                         //$items->push($iSchedule);
+                        
                     }
-                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $items ], 200);
+                    $routes = Route::select('id', 'code','code')->get();
+                    $airlines = Airline::select('id', 'name','name')->get();
+                    return response()->json(['status' => true, 'message' => 'successful', 'data'=> $items, 'route_data'=> $routes, 'airline_data' => $airlines ], 200);
                 }
                 return response()->json([ 'status' => false,'message' => 'No records found'], 200);
             }
