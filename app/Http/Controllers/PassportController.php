@@ -23,10 +23,10 @@ class PassportController extends Controller
         $request->unique_id = rand(pow(10, $digits-1), pow(10, $digits)-1);
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
-            'location' => 'required|min:3',
+            'state' => 'required|min:3',
+            'city' => 'required|min:3',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'unique_id' => 'required|unique:users'
+            'password' => 'required|min:6'
         ]);
             
         $error = $validator->errors()->first();
