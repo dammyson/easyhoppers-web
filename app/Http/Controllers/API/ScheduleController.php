@@ -10,7 +10,6 @@ use App\Events\ScheduleChanged;
 use Carbon\Carbon;
 use App\User;
 use App\ViewModel\ScheduleVM;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Airline;
 
 class ScheduleController extends Controller
@@ -41,7 +40,7 @@ class ScheduleController extends Controller
                                 $isSubscribed = true;
                             }
                         }
-                        $iSchedule = new ScheduleVM();
+                        $iSchedule = new \stdClass;
                         $iSchedule->id = $schedule->id;
                         $iSchedule->name = $schedule->name;
                         $iSchedule->description = $schedule->id;
@@ -57,7 +56,7 @@ class ScheduleController extends Controller
                         //$items->push($iSchedule);
                         
                     }
-                    $routes = Route::select('id', 'code','code')->get();
+                    $routes = \App\Route::select('id', 'code','code')->get();
                     $airlines = Airline::select('id', 'name','name')->get();
                     return response()->json(['status' => true, 'message' => 'successful', 'data'=> $items, 'route_data'=> $routes, 'airline_data' => $airlines ], 200);
                 }
@@ -378,7 +377,7 @@ class ScheduleController extends Controller
         };
         
         if(array_key_exists('route_id', $msg_array)) {
-            if(!Route::find($request->route_id)){
+            if(!\App\Route::find($request->route_id)){
                 return response()->json(['message' => 'Invalid route id', 'status' => false ], 200);
             }
             $schedule->route_id =  $request->route_id;
@@ -405,7 +404,13 @@ class ScheduleController extends Controller
             }
             if(array_key_exists('status', $msg_array)) {
                 $type = "status";
-                $schedule->status =  $request->status;
+                $new_status = $request->status;
+                if($new_status == '1' || $new_status == '2' || $new_status == '3' || $new_status == '4' || $new_status == '5' || $new_status == '6' || $new_status == '11' || $new_status == '12'){
+                    $schedule->status =  $new_status;
+                }else{
+                    $schedule->status = $schedule->status;
+                }
+                
             }
             
             $input_count--;

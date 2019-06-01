@@ -25,7 +25,7 @@ class GraphController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $error, 'status' => false ], 200);
         }
-        
+
         $departure_array = array();
         $arrival_array = array();
        
@@ -53,7 +53,7 @@ class GraphController extends Controller
             array_push($arrival_array,$delayed_arrival_day);
 
             
-            $items =  new ScheduleVM();
+            $items =  new \stdClass;
             $items->departure = $departure_array;
             $items->arrival = $arrival_array;
 

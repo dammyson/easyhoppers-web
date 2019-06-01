@@ -61,7 +61,7 @@ class ExpenseController extends Controller
     }
 
     public function expense_details($id){
-        $sum = 0 ;
+        //$sum = 0 ;
         $items = array();
         $budgetArray = array();
         $expense = ExpenseDetail::where('expense_id',$id)->get();
@@ -71,14 +71,15 @@ class ExpenseController extends Controller
                 $budget = $o_expense->budget;
                 foreach ($expense as $key => $value) {
                     $pieData = new ExpenseDetail();
-                    $pieData->name = $value->category;
+                    $pieData->name = $value->category ." (₦".$value->amount .")";
                     $pieData->amount = (int)$value->amount;
-                    $sum += $value->amount;
+                    //$sum += $value->amount;
                     array_push($items,$pieData);
                 }
                 $budget_details = new ExpenseDetail();
-                $budget_details->budget = $budget;
-                $budget_details->amount_spent =  $sum;
+                $budget_details->budget = (int)$budget;
+                $budget_details->amount_spent =  (int)$o_expense->amount_spent;
+                $budget_details->percentage = ($o_expense->amount_spent/$budget)*100;
                 array_push($budgetArray, $budget_details);
                 return response()->json(['message' => 'Successful','status' => true, 'data' => $expense, 'pie_data'=> $items, 'budget_data' => $budgetArray], 200);
             }

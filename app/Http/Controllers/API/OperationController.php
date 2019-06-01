@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\User;
 use App\Schedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\ViewModel\ScheduleVM;
+use App\Http\Controllers\Controller;
 
 class OperationController extends Controller
 {
@@ -80,19 +80,19 @@ class OperationController extends Controller
                 $percentageCancellations = self::percentageCancellations( $schedules );
                 $percentageDelayedArrivals = self::percentageDelayedArrivals( $schedules );
                 $percentageDelayedDepartures = self::percentageDelayedDepartures( $schedules );
-                $percentageRescheduled = self::percentageRescheduled( $schedules );
+                $percentageEarlyDepartures = self::percentageEarlyDepartures( $schedules );
                 $percentageEarlyArrival= self::percentageEarlyArrival( $schedules );
                 
                 
                 $firstSchedule = $ischedules;
                 $ischedules[0]->name;
-                $flightObj =  new ScheduleVM();
+                $flightObj =  new \stdClass;
                 $flightObj->percentageOnTimeArrivals = $percentageOnTimeArrivals;
                 $flightObj->percentageOnTimeDepartures = $percentageOnTimeDepartures;
                 $flightObj->percentageCancellations = $percentageCancellations;
                 $flightObj->percentageDelayedArrivals = $percentageDelayedArrivals;
                 $flightObj->percentageDelayedDepartures = $percentageDelayedDepartures;
-                $flightObj->percentageRescheduled = $percentageRescheduled;
+                $flightObj->percentageEarlyDepartures = $percentageEarlyDepartures;
                 $flightObj->percentageEarlyArrival = $percentageEarlyArrival;
                 $flightObj->description = $firstSchedule[0]->description;
                 $flightObj->flight = $firstSchedule[0]->name;
@@ -193,6 +193,16 @@ class OperationController extends Controller
         
         $totalArrivedSchedule = $schedule->count();
         $totalRescheduled = $schedule->where('status','11')->count();
+        if($totalRescheduled == 0 ){
+            return 0;
+        }
+        return ($totalRescheduled / $totalArrivedSchedule) * 100;
+    }
+
+    public function percentageEarlyDepartures($schedule){
+        
+        $totalArrivedSchedule = $schedule->count();
+        $totalRescheduled = $schedule->where('status','12')->count();
         if($totalRescheduled == 0 ){
             return 0;
         }
