@@ -44,7 +44,7 @@ Route::middleware('auth:api')->group(function () {
 
    Route::post('/subscribe', 'API\OperationController@subscribe');
 
-   Route::get('/performanceAggregation', 'API\OperationController@performanceAggregation');
+   Route::post('/performanceAggregation', 'API\OperationController@performanceAggregation');
    Route::post('/genericPerformance', 'API\OperationController@genericPerformance');
 
    Route::get('/getSchedule/{id}', 'API\ScheduleController@get');
@@ -56,4 +56,7 @@ Route::middleware('auth:api')->group(function () {
    Route::get('/expense/{id}', 'API\ExpenseController@expense_details');
    Route::post('/expense/add/details', 'API\ExpenseController@add_expense_details');
    Route::get('/expense/close/{id}', 'API\ExpenseController@close_expense');
+
+   
+   Route::post('/graph/', 'API\GraphController@graph');
 });

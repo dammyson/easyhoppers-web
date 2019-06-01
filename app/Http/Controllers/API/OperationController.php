@@ -45,10 +45,23 @@ class OperationController extends Controller
 
     public function performanceAggregation(Request $request){
 
+        $validator = \Validator::make($request->all(), [
+            'from' => 'required',
+            'to' => 'required',
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+
         $items = array();
-        $now = Carbon::now();
-        $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
-        $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
+        // $now = Carbon::now();
+        // $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
+        // $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
+
+        $weekStartDate = $request->from;
+        $weekEndDate = $request->to;
+
         $itt = 0;
         //$schedules = Schedule::whereBetween('scheduled_departure_date',[$weekStartDate, $weekEndDate])->get();
         $schGrps = DB::select("select airlineCode, route_id FROM schedules s  where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' group by airlineCode, route_id "); 
@@ -57,7 +70,7 @@ class OperationController extends Controller
             
            
             $schedules = Schedule::where('route_id',$schGrp->route_id)->where('airlineCode',$schGrp->airlineCode)->get();
-            $ischedules = DB::select("select s.id,al.code airCode, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' and  s.route_id = '$schGrp->route_id' and  s.airlineCode  = '$schGrp->airlineCode' ");
+            $ischedules = DB::select("select s.id,al.code airCode,s.airlineCode ,al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' and  s.route_id = '$schGrp->route_id' and  s.airlineCode  = '$schGrp->airlineCode' ");
             if($schedules){
                 //$percentage_delayed_arrival = self::percentage_delayed_arrival( $schedules );
 
@@ -83,8 +96,8 @@ class OperationController extends Controller
                 $flightObj->percentageEarlyArrival = $percentageEarlyArrival;
                 $flightObj->description = $firstSchedule[0]->description;
                 $flightObj->flight = $firstSchedule[0]->name;
-                $flightObj->airlineId = $firstSchedule[0]->airCode;
-                $flightObj->routeId = $firstSchedule[0]->code;
+                $flightObj->airlineId = $firstSchedule[0]->airlineCode;
+                $flightObj->routeId = $firstSchedule[0]->id;
                 $flightObj->route = $firstSchedule[0]->code;
                 //$flightObj->status = $firstSchedule['status'];
                 

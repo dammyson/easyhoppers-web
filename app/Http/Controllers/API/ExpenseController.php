@@ -61,18 +61,26 @@ class ExpenseController extends Controller
     }
 
     public function expense_details($id){
+        $sum = 0 ;
         $items = array();
+        $budgetArray = array();
         $expense = ExpenseDetail::where('expense_id',$id)->get();
         if($expense){
             if(count($expense)>0){
+                $o_expense = Expense::find($id);
+                $budget = $o_expense->budget;
                 foreach ($expense as $key => $value) {
                     $pieData = new ExpenseDetail();
                     $pieData->name = $value->category;
                     $pieData->amount = (int)$value->amount;
-
+                    $sum += $value->amount;
                     array_push($items,$pieData);
                 }
-                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense, 'pie_data'=> $items], 200);
+                $budget_details = new ExpenseDetail();
+                $budget_details->budget = $budget;
+                $budget_details->amount_spent =  $sum;
+                array_push($budgetArray, $budget_details);
+                return response()->json(['message' => 'Successful','status' => true, 'data' => $expense, 'pie_data'=> $items, 'budget_data' => $budgetArray], 200);
             }
             return response()->json(['message' => 'No expense found','status' => false], 200);
         }
@@ -108,6 +116,8 @@ class ExpenseController extends Controller
             $expense_details->expense_id = $request->expense_id;
 
             if( $expense_details->save()){
+                $expCheck->amount_spent += $request->amount;
+                $expCheck->save();
                 return response()->json(['message' => 'Successful','status' => true ], 200);
             }else{
                 return response()->json(['message' => 'Could not save records','status' => false ], 200);
