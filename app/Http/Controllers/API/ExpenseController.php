@@ -39,7 +39,7 @@ class ExpenseController extends Controller
             $expense->start_date = Carbon::now();
 
             if( $expense->save()){
-                return response()->json(['message' => 'Successful','status' => true, 'expense_id', $expense->id  ], 200);
+                return response()->json(['message' => 'Successful','status' => true, 'expense_id' => $expense->id  ], 200);
             }else{
                 return response()->json(['message' => 'Could not save records','status' => false ], 200);
             }

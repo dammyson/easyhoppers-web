@@ -66,50 +66,122 @@ class GraphController extends Controller
         return response()->json([ 'status' => false,'message' => 'Something went wrong'], 200);
     }
 
-    public function early_departure_day($startDate, $endDate, $airlineCode, $route_id){
+    public function early_departure_day($startDate, $endDate, $airlineCode, $route_id){   
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '12';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function early_arrival_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '11';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function onTime_departure_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '2';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function onTime_arrival_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '1';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function delayed_departure_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '4';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function delayed_arrival_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '3';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function cancelled_departure_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '5';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 
     public function resheduled_departure_day($startDate, $endDate, $airlineCode, $route_id){
 
         $result = DB::select("select '0' as x, '0' as y union all select DATE_FORMAT(scheduled_departure_time, '%H:%i')  as x, ifnull(DATE_FORMAT(actual_departure_time, '%H:%i'),0) as y from schedules where scheduled_departure_date between '$startDate' and '$endDate'  and route_id =  '$route_id' and airlineCode = '$airlineCode' and status = '6';");
-        return $result;
+        $iret = array();
+        foreach ($result as $key => $value) {
+            $iSchedule = new \stdClass;
+            $iSchedule->x = (int)$value->x;
+            $iSchedule->y = (double)$value->y;
+
+            array_push($iret, $iSchedule);
+        }
+
+        return $iret;
     }
 }

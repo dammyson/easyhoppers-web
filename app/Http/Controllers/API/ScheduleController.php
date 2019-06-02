@@ -43,7 +43,7 @@ class ScheduleController extends Controller
                         $iSchedule = new \stdClass;
                         $iSchedule->id = $schedule->id;
                         $iSchedule->name = $schedule->name;
-                        $iSchedule->description = $schedule->id;
+                        $iSchedule->description = $schedule->description;
                         $iSchedule->scheduled_departure_time = $schedule->scheduled_departure_time;
                         $iSchedule->scheduled_arrival_time = $schedule->scheduled_arrival_time;
                         $iSchedule->departure_port = $schedule->departure_port;
@@ -384,7 +384,7 @@ class ScheduleController extends Controller
         }
 
         $input_count = count($request->all());
-        while($input_count > 1){
+        while($input_count > 0){
 
             if(array_key_exists('actual_departure_time', $msg_array)) {
                 $type = "actual_departure_time";
