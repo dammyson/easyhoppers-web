@@ -71,8 +71,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y =  (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -86,8 +86,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -101,8 +101,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -116,8 +116,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -131,8 +131,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -146,8 +146,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -161,8 +161,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
@@ -176,8 +176,8 @@ class GraphController extends Controller
         $iret = array();
         foreach ($result as $key => $value) {
             $iSchedule = new \stdClass;
-            $iSchedule->x = (int)$value->x;
-            $iSchedule->y = (double)$value->y;
+            $iSchedule->x = (float)$value->x;
+            $iSchedule->y = (float)$value->y;
 
             array_push($iret, $iSchedule);
         }
