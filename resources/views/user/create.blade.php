@@ -76,12 +76,15 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Single Upload Agents</h6>
                     </div>
-               
+
                     <div class="card-body">
+                    <span style="font-weight:900;">Unique ID: {{$unique_id}}</span>
+                    <br><br>
                     <form class="user" method="POST" action="{{ route('saveUser') }}">
                          @csrf
                     <div class="form-group">
                       <input type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }} form-control-user" id="exampleInputName" aria-describedby="nameHelp" placeholder="Enter Fullname..."  name="name" value="{{ old('name') }}" required autofocus>
+                      <input type="text" class=""   name="unique_id" value="{{ $unique_id }}" hidden>
                         @if ($errors->has('name'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -89,10 +92,10 @@
                         @endif
                     </div>
                     <div class="form-group">
-                      <input type="text" class="form-control{{ $errors->has('unique_id') ? ' is-invalid' : '' }} form-control-user" id="exampleInputPhone" aria-describedby="phoneHelp" placeholder="Enter PhoneNumber..."  name="unique_id" value="{{ old('unique_id') }}" required>
+                      <input type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }} form-control-user" id="exampleInputPhone" aria-describedby="phoneHelp" placeholder="Enter PhoneNumber..."  name="phone" value="{{ old('phone') }}" required>
                         @if ($errors->has('unique_id'))
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('unique_id') }}</strong>
+                                <strong>{{ $errors->first('phone') }}</strong>
                             </span>
                         @endif
                     </div>

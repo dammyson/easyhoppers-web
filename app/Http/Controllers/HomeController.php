@@ -109,11 +109,13 @@ class HomeController extends Controller
     }
 
     public function create(){
-        return view('user.create');
+        $unique_id = rand(pow(10, 9), pow(10, 10)-1);
+        return view('user.create',['unique_id'=>$unique_id]);
     }
 
     public function store(Request $request){
         $custom_errors = array();
+        $digits = 10;
         $validator = Validator::make($request->all(),[
             'file'      => 'required|max:2048',
         ]);
@@ -138,13 +140,15 @@ class HomeController extends Controller
                             #var_dump($data);
                             foreach ($data as $key => $value) {
                                 
+                                $unique_id = rand(pow(10, $digits-1), pow(10, $digits)-1);
                               // $isValid =  self::validate_data($value);
                                 $isValid = true;
                                 if($isValid){
                                     $insert[] = [
                                         'name' => $value->fullname,
                                         'email' => $value->email,
-                                        'unique_id' => $value->phone,
+                                        'phone' => $value->phone,
+                                        'unique_id' => $unique_id,
                                         'state' => $value->state,
                                         'city' => $value->city,
                                         'terminal' => $value->terminal,
@@ -205,6 +209,7 @@ class HomeController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|min:3',
             'unique_id' => 'required|min:3',
+            'phone' => 'required|min:3',
             'email' => 'required|email',
             'state' => 'required',
             'city' => 'required',
@@ -221,6 +226,7 @@ class HomeController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->unique_id = $request->unique_id;
+        $user->phone = $request->phone;
         $user->email = $request->email;
         $user->state = $request->state;
         $user->city = $request->city;
