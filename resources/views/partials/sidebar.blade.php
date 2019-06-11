@@ -84,7 +84,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAirlines" aria-expanded="true" aria-controls="collapseAirlines">
           <i class="fas fa-fw fa-plane-departure"></i>
-          <span>Airline</span>
+          <span>Airlines</span>
         </a>
         <div id="collapseAirlines" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
@@ -106,6 +106,20 @@
             <!-- <h6 class="collapse-header">Login Screens:</h6> -->
             <a class="collapse-item" href="/airport/create">Add New</a>
             <a class="collapse-item" href="/airport/list">View</a>
+          </div>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTerminals" aria-expanded="true" aria-controls="collapseTerminals">
+          <i class="fas fa-fw fa-plane-arrival"></i>
+          <span>Terminals</span>
+        </a>
+        <div id="collapseTerminals" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <!-- <h6 class="collapse-header">Login Screens:</h6> -->
+            <a class="collapse-item" href="/airline/create">Add New</a>
+            <a class="collapse-item" href="/airline/list">View</a>
           </div>
         </div>
       </li>
