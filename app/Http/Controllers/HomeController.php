@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\Role;
+use App\State;
 use Session;
 use Excel;
 use File;
@@ -110,7 +111,8 @@ class HomeController extends Controller
 
     public function create(){
         $unique_id = rand(pow(10, 9), pow(10, 10)-1);
-        return view('user.create',['unique_id'=>$unique_id]);
+        $states = State::select('id','name')->get();
+        return view('user.create',['unique_id'=>$unique_id, 'states'=> $states ]);
     }
 
     public function store(Request $request){

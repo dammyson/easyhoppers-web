@@ -99,60 +99,36 @@
                             </span>
                         @endif
                     </div>
+                  
+
                     <div class="form-group">
-                      <input type="text" class="form-control{{ $errors->has('terminal') ? ' is-invalid' : '' }} form-control-user" id="exampleInputTerminal" aria-describedby="terminalHelp" placeholder="Enter Terminal..."  name="terminal" value="{{ old('terminal') }}" required>
-                        @if ($errors->has('terminal'))
+                        <select name="state" id="state" class="form-control " onclick="LoadTerminals(value)" required>
+                        <option value="" selected="selected" disabled>- Select State-</option>
+                            @foreach($states as $state)
+                                <option value="{{ $state->id}}" >{{ $state->name}}</option>
+                            @endforeach
+
+                        </select>
+                        @if ($errors->has('state'))
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('terminal') }}</strong>
+                                <strong>{{ $errors->first('state') }}</strong>
                             </span>
                         @endif
                     </div>
 
                     <div class="form-group">
-                        <select name="state" id="state" class="form-control " required>
-                            <option value="" selected="selected">- Select State-</option>
-                            <option value="Abuja FCT">Abuja FCT</option>
-                            <option value="Abia">Abia</option>
-                            <option value="Adamawa">Adamawa</option>
-                            <option value="Akwa Ibom">Akwa Ibom</option>
-                            <option value="Anambra">Anambra</option>
-                            <option value="Bauchi">Bauchi</option>
-                            <option value="Bayelsa">Bayelsa</option>
-                            <option value="Benue">Benue</option>
-                            <option value="Borno">Borno</option>
-                            <option value="Cross River">Cross River</option>
-                            <option value="Delta">Delta</option>
-                            <option value="Ebonyi">Ebonyi</option>
-                            <option value="Edo">Edo</option>
-                            <option value="Ekiti">Ekiti</option>
-                            <option value="Enugu">Enugu</option>
-                            <option value="Gombe">Gombe</option>
-                            <option value="Imo">Imo</option>
-                            <option value="Jigawa">Jigawa</option>
-                            <option value="Kaduna">Kaduna</option>
-                            <option value="Kano">Kano</option>
-                            <option value="Katsina">Katsina</option>
-                            <option value="Kebbi">Kebbi</option>
-                            <option value="Kogi">Kogi</option>
-                            <option value="Kwara">Kwara</option>
-                            <option value="Lagos">Lagos</option>
-                            <option value="Nassarawa">Nassarawa</option>
-                            <option value="Niger">Niger</option>
-                            <option value="Ogun">Ogun</option>
-                            <option value="Ondo">Ondo</option>
-                            <option value="Osun">Osun</option>
-                            <option value="Oyo">Oyo</option>
-                            <option value="Plateau">Plateau</option>
-                            <option value="Rivers">Rivers</option>
-                            <option value="Sokoto">Sokoto</option>
-                            <option value="Taraba">Taraba</option>
-                            <option value="Yobe">Yobe</option>
-                            <option value="Zamfara">Zamfara</option>
-                            <option value="Outside Nigeria">Outside Nigeria</option>
-                        </select>
-                        @if ($errors->has('state'))
+                      <!-- <input type="text" class="form-control{{ $errors->has('terminal') ? ' is-invalid' : '' }} form-control-user" id="exampleInputTerminal" aria-describedby="terminalHelp" placeholder="Enter Terminal..."  name="terminal" value="{{ old('terminal') }}" required> -->
+                      <select name="terminal" id="terminal" class="form-control " required>
+                      <option value="" selected="selected" disabled>- No terminals loaded-</option>
+                            <!-- @foreach($states as $state)
+                                <option value="{{ $state->name}}" >{{ $state->name}}</option>
+                            @endforeach -->
+
+                        </select>  
+                      
+                      @if ($errors->has('terminal'))
                             <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('state') }}</strong>
+                                <strong>{{ $errors->first('terminal') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -203,3 +179,38 @@
 
 @endsection()
 
+<script type="text/javascript">
+ function LoadTerminals($value){
+     var processmsg = "<option value='0'> Please wait... </option>";
+     $("#terminal").html(processmsg).show();
+
+     
+     if($value){
+        var url = "/terminal/load_terminals/"+$value;
+        
+        $.ajax({
+            url:url,
+            cache:false,
+            type: "GET",
+            success: function(data){
+                if(data.status === false){
+                  optionMarkup += `<option value="0">${data.message}<option>`;  
+                }
+                else{
+                    var params = data.terminals;
+                    var optionMarkup = "<option value='0' selected='selected' disabled>:: Select Terminal ::</option>";
+                    for(var x = 0; x < params.length; x++){
+                        optionMarkup += `<option value="${params[x].id}">${params[x].code}</option>`;  
+                    }
+                }
+                $("#terminal").html(optionMarkup).show();
+            },
+            error: function(response){
+                console.log("An error occurd: "+response);
+            }
+        });
+
+     }
+     
+ }
+</script>

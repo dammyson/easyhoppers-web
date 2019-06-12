@@ -45,6 +45,14 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::post('/user/single/new', 'HomeController@save')->name('saveUser');
     Route::get('/user/status/{user_id}/{status}', 'HomeController@change_agent_status');
     Route::get('/user/delete/{id}', 'HomeController@delete_agent');
+
+
+    Route::get('/terminal/new', 'TerminalController@create');
+    Route::post('/terminal/new', 'TerminalController@store')->name('saveTerminal');
+    Route::get('/terminal/list', 'TerminalController@index');
+    Route::get('/terminal/load_terminals/{state_id}', 'TerminalController@load_terminals');
+    
+
 });
 
 

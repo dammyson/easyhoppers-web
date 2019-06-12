@@ -118,8 +118,8 @@
         <div id="collapseTerminals" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <!-- <h6 class="collapse-header">Login Screens:</h6> -->
-            <a class="collapse-item" href="/airline/create">Add New</a>
-            <a class="collapse-item" href="/airline/list">View</a>
+            <a class="collapse-item" href="/terminal/new">Add New</a>
+            <a class="collapse-item" href="/terminal/list">View</a>
           </div>
         </div>
       </li>
