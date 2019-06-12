@@ -18,6 +18,7 @@ class ExpenseController extends Controller
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
             'budget' => 'required',
+            'currency' => 'required'
         ]);
         $error = $validator->errors()->first();
         if ($validator->fails()) {
@@ -36,6 +37,7 @@ class ExpenseController extends Controller
             $expense->budget = $request->budget;
             $expense->amount_spent = 0;
             $expense->user_email = $authEmail;
+            $expense->currency = $request->currency;
             $expense->start_date = Carbon::now();
 
             if( $expense->save()){

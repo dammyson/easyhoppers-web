@@ -21,6 +21,7 @@ class CreateExpensesTable extends Migration
             $table->decimal('amount_spent',10,2);
             $table->date('start_date');
             $table->date('end_date')->nullable();
+            $table->string('currency');
             $table->tinyInteger('status')->default('0');
             $table->timestamps();
         });
