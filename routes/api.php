@@ -25,8 +25,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
     Route::get('users', 'PassportController@users');
     Route::get('ischedules', 'PassportController@getSchedules');
-   //Route::resource('products', 'ProductController');
+    //Route::resource('products', 'ProductController');
 
+    Route::put('user/update/{id}', 'HomeController@update_user');
+    
    Route::get('routes', 'RouteController@list');
    Route::get('airlines', 'AirlineController@list');
    Route::get('airports', 'AirPortController@list');

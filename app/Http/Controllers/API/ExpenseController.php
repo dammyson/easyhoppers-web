@@ -18,7 +18,7 @@ class ExpenseController extends Controller
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
             'budget' => 'required',
-            'currency' => 'required'
+            'currency' => 'required',
         ]);
         $error = $validator->errors()->first();
         if ($validator->fails()) {
@@ -96,7 +96,8 @@ class ExpenseController extends Controller
             'category' => 'required',
             'amount' => 'required',
             'description' => 'required',
-            'expense_id' => 'required'
+            'expense_id' => 'required',
+            'date_of_expense' => 'required'
         ]);
         $error = $validator->errors()->first();
         if ($validator->fails()) {
@@ -117,6 +118,7 @@ class ExpenseController extends Controller
             $expense_details->amount = $request->amount;
             $expense_details->description = $request->description;
             $expense_details->expense_id = $request->expense_id;
+            $expense_details->date_of_expense = $request->date_of_expense;
 
             if( $expense_details->save()){
                 $expCheck->amount_spent += $request->amount;

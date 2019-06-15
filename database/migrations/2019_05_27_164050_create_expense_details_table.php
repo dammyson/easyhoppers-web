@@ -19,6 +19,7 @@ class CreateExpenseDetailsTable extends Migration
             $table->string('category');           
             $table->decimal('amount',10,2);
             $table->string('description');           
+            $table->string('date_of_expense');           
             $table->timestamps();
         });
     }

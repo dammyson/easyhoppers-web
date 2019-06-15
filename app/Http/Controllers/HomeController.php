@@ -277,4 +277,50 @@ class HomeController extends Controller
         }
 
     }
+
+    public function update_user(Request $request, $id){
+        $user = User::find($id);
+
+        if(!$user){
+            return response()->json(['message' => 'No User found', 'status' => false ], 200);
+        }
+
+        if(!$msg_array = json_decode($request->getContent(), true)){
+            return response()->json(['message' => 'Message body is empty', 'status' => false, 'as'=>$msg_array ], 200);
+        };
+
+        $input_count = count($request->all());
+        while($input_count > 0){
+            if(array_key_exists('firstname', $msg_array)) {
+                $user->firstname =  $request->firstname;
+            }
+            if(array_key_exists('lastname', $msg_array)) {
+                $user->lastname =  $request->lastname;
+            }
+            if(array_key_exists('DOB', $msg_array)) {
+                $user->DOB =  $request->DOB;
+            }
+            if(array_key_exists('phone', $msg_array)) {
+                $user->phone =  $request->phone;
+            }
+            if(array_key_exists('state', $msg_array)) {
+                $user->state =  $request->state;
+            }
+            if(array_key_exists('terminal', $msg_array)) {
+                $user->terminal =  $request->terminal;
+            }
+            if(array_key_exists('unique_id', $msg_array)) {
+                $user->unique_id =  $request->unique_id;
+            }
+            if(array_key_exists('gender', $msg_array)) {
+                $user->gender =  $request->gender;
+            }
+            $input_count--;
+        }
+
+        if($user->save()){
+            return response()->json(['message' => 'Successful','status' => true ], 200);
+        }
+        return response()->json(['message' => 'Failed','status' => false ], 200);
+    }
 }
