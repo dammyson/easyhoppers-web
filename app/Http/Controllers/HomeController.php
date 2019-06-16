@@ -278,7 +278,10 @@ class HomeController extends Controller
 
     }
 
-    public function update_user(Request $request, $id){
+    public function update_user(Request $request){
+
+        $authUser = auth()->user();
+        $id = $authUser->id;
         $user = User::find($id);
 
         if(!$user){
