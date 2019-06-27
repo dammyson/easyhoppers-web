@@ -59,7 +59,9 @@ class RouteController extends Controller
         $code = $request->departure_port ."-". $request->arrival_port;
         $departure_port = AirPort::where('code',$request->departure_port)->first();
         $arrival_port = AirPort::where('code',$request->arrival_port)->first();
-        $airline = Route::create(['arrival_port' => $arrival_port->code, 'departure_port' => $departure_port->code,'code'=> $code]);
+        $arrival_port_name = State::where('code',$arrival_port)->first();
+        $departure_port_name = State::where('code',$departure_port)->first();
+        $airline = Route::create(['arrival_port' => $arrival_port->code, 'departure_port' => $departure_port->code,'code'=> $code, 'arrival_port_name' => $arrival_port_name->code, 'departure_port_name' => $departure_port_name->code,]);
         Session::flash('success', 'Route added successfully !!!');
 
         $routes = Route::all();
@@ -116,4 +118,5 @@ class RouteController extends Controller
         $routes = Route::orderBy('code', 'asc')->get();
         return response()->json(['message' => $routes, 'status' => true ], 200);
     }
+
 }
