@@ -35,10 +35,12 @@ class ScheduleController extends Controller
                         $user = User::where('email',$authUser->email)->first();
                         //return response()->json(['status' => true, 'message' => 'successful', 'data'=> $user ], 200);
                         if($user->subscription != "" || $user->subscription != null){
-                            $subscription_arr = explode (",", $user->subscription);
-                            if(in_array($schedule->id, $subscription_arr)){
+                            $subscription_arr = explode(",", $user->subscription);
+                            if(in_array($schedule->id, $subscription_arr))
                                 $isSubscribed = true;
-                            }
+                            else
+                                $isSubscribed = false;
+                            
                         }
                         $iSchedule = new \stdClass;
                         $iSchedule->id = $schedule->id;
