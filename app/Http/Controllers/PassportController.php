@@ -26,6 +26,7 @@ class PassportController extends Controller
             'state' => 'required|min:3',
             'city' => 'required|min:3',
             'email' => 'required|email|unique:users',
+            'phone' => 'required|min:10',
             'password' => 'required|min:6'
         ]);
             
@@ -45,6 +46,7 @@ class PassportController extends Controller
             'state' => $request->state,
             'city' => $request->city,
             'unique_id' => $request->unique_id,
+            'phone' => $request->phone,
             'password' => bcrypt($request->password)
         ]);
         

@@ -66,14 +66,15 @@ class ExpenseController extends Controller
         //$sum = 0 ;
         $items = array();
         $budgetArray = array();
-        $expense = ExpenseDetail::where('expense_id',$id)->get();
+        //$expense = ExpenseDetail::where('expense_id',$id)->get();
+        $expense = DB::select("select a.id, expense_id, category, amount, description, a.created_at, a.updated_at, b.currency FROM eazyhopper_db.expense_details a  left join eazyhopper_db.expenses b on a.expense_id = b.id;");
         if($expense){
             if(count($expense)>0){
                 $o_expense = Expense::find($id);
                 $budget = $o_expense->budget;
                 foreach ($expense as $key => $value) {
                     $pieData = new ExpenseDetail();
-                    $pieData->name = $value->category ." (₦".$value->amount .")";
+                    $pieData->name = $value->category ." (".$expense[0]->currency." ".$value->amount .")";
                     $pieData->amount = (int)$value->amount;
                     //$sum += $value->amount;
                     array_push($items,$pieData);
