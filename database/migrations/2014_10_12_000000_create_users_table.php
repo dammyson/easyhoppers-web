@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->decimal('balance',8,2)->default('0');
             $table->tinyInteger('status')->default('0');
             $table->string('email')->unique();
+            $table->string('mobile_token')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

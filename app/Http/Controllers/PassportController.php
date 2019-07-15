@@ -70,6 +70,15 @@ class PassportController extends Controller
      */
     public function login(Request $request)
     {
+
+        $validator = \Validator::make($request->all(), [
+            'mobile_token' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+
         $credentials = [
             'email' => $request->email,
             'password' => $request->password
@@ -87,6 +96,7 @@ class PassportController extends Controller
             $user_role = $user->roles->first()->name;
             $token = auth()->user()->createToken($request->email)->accessToken;
             $user->updated_at = \Carbon\Carbon::now();
+            $user->mobile_token = $request->mobile_token;
             $user->save();
             return response()->json(['status' => true, 'message'=> 'Login successful','token' => $token, 'Role' => $user_role ], 200);
         } else {
