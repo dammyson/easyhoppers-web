@@ -318,6 +318,9 @@ class HomeController extends Controller
             if(array_key_exists('gender', $msg_array)) {
                 $user->gender =  $request->gender;
             }
+            if(array_key_exists('occupation', $msg_array)) {
+                $user->occupation =  $request->occupation;
+            }
             $input_count--;
         }
 

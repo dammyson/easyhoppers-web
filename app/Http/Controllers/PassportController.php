@@ -164,5 +164,40 @@ class PassportController extends Controller
         }
     }
 
+    public function reset_password(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'new_password' => 'required|required_with:confirm_password|same:confirm_password',
+            'confirm_password' => 'required'
+        ]);
+            
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+         return response()->json([
+             'message' => $error,
+             'status' => false
+         ], 200);
+        }
+
+        $authUser = auth()->user();
+        $credentials = [
+            'username' => $authUser->email,
+            'password' => $request['old_password'],
+        ];
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'message' => "Invalid password",
+                'status' => false
+            ], 200);
+        }
+    
+        $user = User::where('email',$authUser->email)->first();
+        $user->password =  bcrypt($request->new_password);
+        if($user->save()){
+            return response()->json(['message' => 'Password changed successfully !!!','status' => true ], 200);
+        }
+        return response()->json(['message' => 'Password reset failed','status' => false ], 200);
+    }
     
 }

@@ -67,7 +67,7 @@ class ExpenseController extends Controller
         $items = array();
         $budgetArray = array();
         //$expense = ExpenseDetail::where('expense_id',$id)->get();
-        $expense = DB::select("select a.id, expense_id, category, amount, description, a.created_at, a.updated_at, b.currency FROM eazyhopper_db.expense_details a  left join eazyhopper_db.expenses b on a.expense_id = b.id;");
+        $expense = DB::select("select a.id, expense_id, category, amount, description, a.created_at, a.updated_at, b.currency FROM eazyhopper_db.expense_details a  left join eazyhopper_db.expenses b on a.expense_id = b.id where expense_id = '$id';");
         if($expense){
             if(count($expense)>0){
                 $o_expense = Expense::find($id);

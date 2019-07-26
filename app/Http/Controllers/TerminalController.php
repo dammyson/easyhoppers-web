@@ -18,7 +18,7 @@ class TerminalController extends Controller
      */
     public function index()
     {
-        $terminals = DB::select("select t.id, code, s.name from terminals t left join states s on t.state_id = s.id;");
+        $terminals = DB::select("select t.id, t.code, s.name from terminals t left join states s on t.state_id = s.id;");
         return view('terminal.index',[ 'terminals'=> $terminals]);
     }
 
@@ -57,7 +57,7 @@ class TerminalController extends Controller
             $terminal->state_id = $request->state;
             if($terminal->save()){
                 Session::flash('success', 'Your Data has successfully added');
-                $terminals = DB::select("select t.id, code, s.name  from terminals t left join states s on t.state_id = s.id;");
+                $terminals = DB::select("select t.id, t.code, s.name  from terminals t left join states s on t.state_id = s.id;");
                 return view('terminal.index',[ 'terminals'=> $terminals ]);
             }
 
