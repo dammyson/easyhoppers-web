@@ -28,17 +28,19 @@ class ScheduleController extends Controller
             $now = Carbon::now();
             $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
             $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
-            $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
+            $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port,  r.departure_port_name, r.arrival_port_name,status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' ");
             if($schedules){
                 if(count($schedules) > 0){
                     foreach ($schedules as $key => $schedule) {
                         $user = User::where('email',$authUser->email)->first();
                         //return response()->json(['status' => true, 'message' => 'successful', 'data'=> $user ], 200);
                         if($user->subscription != "" || $user->subscription != null){
-                            $subscription_arr = explode (",", $user->subscription);
-                            if(in_array($schedule->id, $subscription_arr)){
+                            $subscription_arr = explode(",", $user->subscription);
+                            if(in_array($schedule->id, $subscription_arr))
                                 $isSubscribed = true;
-                            }
+                            else
+                                $isSubscribed = false;
+                            
                         }
                         $iSchedule = new \stdClass;
                         $iSchedule->id = $schedule->id;
@@ -52,6 +54,8 @@ class ScheduleController extends Controller
                         $iSchedule->scheduled_departure_date = $schedule->scheduled_departure_date;
                         $iSchedule->scheduled_arrival_date = $schedule->scheduled_arrival_date;
                         $iSchedule->isSubscribed = $isSubscribed;
+                        $iSchedule->departure_port_name = $schedule->departure_port_name;
+                        $iSchedule->arrival_port_name = $schedule->arrival_port_name;
                         array_push($items,$iSchedule);
                         //$items->push($iSchedule);
                         
@@ -73,7 +77,7 @@ class ScheduleController extends Controller
         if($id == ""){
             return response()->json([ 'status' => false,'message' => "No Schedule Id"], 200);
         }
-        $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.id = '$id' ");
+        $schedules = DB::select("select s.id, al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.departure_port, r.arrival_port, r.departure_port_name, r.arrival_port_name, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.id = '$id' ");
         if($schedules == null || count($schedules) < 1){
             return response()->json([ 'status' => false,'message' => "No schedule found"], 200);
         }else{

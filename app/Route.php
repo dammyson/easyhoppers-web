@@ -12,6 +12,6 @@ class Route extends Model
      * @var array
      */
     protected $fillable = [
-        'departure_port', 'arrival_port', 'code'
+        'departure_port', 'arrival_port', 'departure_port_name', 'arrival_port_name','code'
     ];
 }

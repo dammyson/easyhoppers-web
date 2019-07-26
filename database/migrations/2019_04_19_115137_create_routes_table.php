@@ -17,6 +17,8 @@ class CreateRoutesTable extends Migration
             $table->bigIncrements('id');
             $table->string('departure_port');
             $table->string('arrival_port');
+            $table->string('departure_port_name');
+            $table->string('arrival_port_name');
             $table->string('code');
             $table->timestamps();
         });
