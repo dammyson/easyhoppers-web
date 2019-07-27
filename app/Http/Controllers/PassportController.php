@@ -174,7 +174,7 @@ class PassportController extends Controller
         }
     }
 
-    public function reset_password(Request $request){
+    public function change_password(Request $request){
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required|required_with:confirm_password|same:confirm_password',
@@ -190,16 +190,9 @@ class PassportController extends Controller
         }
 
         $authUser = auth()->user();
-        $credentials = [
-            'username' => $authUser->email,
-            'password' => $request['old_password'],
-        ];
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => "Invalid password",
-                'status' => false
-            ], 200);
+       
+        if (!password_verify($request['old_password'], $authUser->password)) {
+            return response()->json(['message' => "Invalid password",'status' => false ], 200);
         }
     
         $user = User::where('email',$authUser->email)->first();
@@ -210,4 +203,43 @@ class PassportController extends Controller
         return response()->json(['message' => 'Password reset failed','status' => false ], 200);
     }
     
+    public function reset_password(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+            
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+         return response()->json(['message' => $error,'status' => false ], 200);
+        }
+
+        $user = User::where('email',$request['email'])->first();
+        if(!$user || $user == null){
+            return response()->json(['status' => false,'message' => 'Invalid email !!!'], 200);
+        }
+
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzQWERTYUIOPLKJHGFDSAZXCVBNM';
+        $new_password_before_hash =  substr(str_shuffle($permitted_chars), 0, 10);
+
+        $user->password =  bcrypt($new_password_before_hash);
+
+        //return response()->json(['message' => $new_password,'status' => true ], 200);
+        if($user->save()){
+            self::sendEmail($request['email'], $new_password_before_hash, $user->name);
+
+            return response()->json(['message' => 'Password changed successfully !!!','status' => true ], 200);
+        }
+
+        return response()->json(['message' => 'Password reset failed','status' => false ], 200);
+    }
+
+    private function sendEmail($email, $new_password, $name){
+        $to_name = $name;
+        $to_email = $email;
+        $data = array('new_password'=>$new_password);
+        \Mail::send('emails.mail', $data, function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('EazyHopper: Reset Password');
+            $message->from('hello@eazyhoppers.com','Password reset');
+        });
+            }
 }

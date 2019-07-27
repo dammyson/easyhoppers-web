@@ -20,11 +20,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'PassportController@login');
 Route::post('register', 'PassportController@register');
+Route::post('reset_password', 'PassportController@reset_password');
  
+Route::group(['middleware' => ['web','auth:api']], function () {
+  
+});
+
+
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
     Route::get('users', 'PassportController@users');
     Route::get('ischedules', 'PassportController@getSchedules');
+    Route::post('/change_password', 'PassportController@change_password');
     //Route::resource('products', 'ProductController');
 
     Route::put('user/update', 'HomeController@update_user');

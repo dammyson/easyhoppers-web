@@ -52,6 +52,7 @@ Route::group(['middleware' => ['web','auth']], function () {
     Route::get('/terminal/list', 'TerminalController@index');
     Route::get('/terminal/load_terminals/{state_id}', 'TerminalController@load_terminals');
     
+    
 
 });
 
