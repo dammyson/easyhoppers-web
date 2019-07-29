@@ -74,7 +74,7 @@ class PassportController extends Controller
     {
 
         $validator = \Validator::make($request->all(), [
-            'mobile_token' => 'required'
+            //'mobile_token' => 'required'
         ]);
         $error = $validator->errors()->first();
         if ($validator->fails()) {

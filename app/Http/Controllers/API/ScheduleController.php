@@ -407,7 +407,8 @@ class ScheduleController extends Controller
                 $schedule->actual_arrival_time =  $request->actual_arrival_time;
             }
             if(array_key_exists('status', $msg_array)) {
-                $type = "status";
+                //$type = "status";
+                $type = $request->status;
                 $new_status = $request->status;
                 if($new_status == '1' || $new_status == '2' || $new_status == '3' || $new_status == '4' || $new_status == '5' || $new_status == '6' || $new_status == '11' || $new_status == '12'){
                     $schedule->status =  $new_status;
