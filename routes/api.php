@@ -65,6 +65,7 @@ Route::middleware('auth:api')->group(function () {
    Route::get('/expense/{id}', 'API\ExpenseController@expense_details');
    Route::post('/expense/add/details', 'API\ExpenseController@add_expense_details');
    Route::get('/expense/close/{id}', 'API\ExpenseController@close_expense');
+   Route::post('/expense/send_expense', 'API\ExpenseController@send_expense');
 
    
    Route::post('/graph/', 'API\GraphController@graph');

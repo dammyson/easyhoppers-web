@@ -9,6 +9,7 @@ use App\Expense;
 use App\ExpenseDetail;
 use App\User;
 use Illuminate\Support\Carbon;
+use App\Util;
 
 class ExpenseController extends Controller
 {
@@ -160,7 +161,10 @@ class ExpenseController extends Controller
         if($expense_details){
             $subject = "Expense Summary";
             $template = "emails.expense";
-            HelperClass::sendEmail($request['email'], $user->name, "hello@eazyhoppers.com", "no-reply@easyhoppers.com",   $subject ,$template, $data);
+            $data = array('expense_details'=>$expense_details );
+
+            //dd($data);
+             \App\Util\HelperClass::sendEmail($request['email'], $request['email'], "hello@eazyhoppers.com", "no-reply@easyhoppers.com",   $subject ,$template, $data);
             
         }
     }

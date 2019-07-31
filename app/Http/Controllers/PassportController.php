@@ -226,7 +226,7 @@ class PassportController extends Controller
         //return response()->json(['message' => $new_password,'status' => true ], 200);
         if($user->save()){
             $data = array('new_password'=>$new_password_before_hash);
-            HelperClass::sendEmail($request['email'], $user->name, "hello@eazyhoppers.com", "no-reply@easyhoppers.com",  "EasyHopper: Reset Password","emails.mail", $data);
+            \App\Util\HelperClass::sendEmail($request['email'], $user->name, "hello@eazyhoppers.com", "no-reply@easyhoppers.com",  "EasyHopper: Reset Password","emails.mail", $data);
             //self::sendEmail($request['email'], $user->name, "hello@eazyhoppers.com", "no-reply@easyhoppers.com",  "EasyHopper: Reset Password","emails.mail", $data);
 
             return response()->json(['message' => 'Password changed successfully !!!','status' => true ], 200);

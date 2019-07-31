@@ -95,7 +95,7 @@ class SendUpdateToMobile
         return "Flight is on Ground";
       elseif($status == 2)
         return "Flight is Air Borne";
-      elseif($statuss == 3)
+      elseif($status == 3)
         return "Flight Delayed";
       elseif($status == 4)
         return "Flight is Taxiing";
