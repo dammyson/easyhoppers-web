@@ -57,6 +57,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 });
 
 
+Route::get('/expense/send_expense', 'API\ExpenseController@send_exp');
 
 Auth::routes();
 

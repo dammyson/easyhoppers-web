@@ -156,15 +156,31 @@ class ExpenseController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $error, 'status' => false ], 200);
         }
-
-        $expense_details = ExpenseDetail::find($request->expense_id);
+        $expense_details = ExpenseDetail::where('expense_id',$request->expense_id)->get();
+        //$expense_details = ExpenseDetail::find();
         if($expense_details){
             $subject = "Expense Summary";
             $template = "emails.expense";
             $data = array('expense_details'=>$expense_details );
 
+           
+
             //dd($data);
              \App\Util\HelperClass::sendEmail($request['email'], $request['email'], "hello@eazyhoppers.com", "no-reply@easyhoppers.com",   $subject ,$template, $data);
+            
+        }
+    }
+
+    public function send_exp(){
+        $expense_details = ExpenseDetail::where('expense_id','1')->get();
+        if($expense_details){
+            $subject = "Expense Summary";
+            $template = "emails.expense";
+            $data = array('expense_details'=>$expense_details );
+
+           
+
+            return view('emails.expense',$data);
             
         }
     }

@@ -79,14 +79,12 @@
                             <tbody>
                             @foreach($expense_details as $expense_detail)
                             <tr>
-                                <td>{{$expense_detail['category']}}</td>
-                                <td>{{$expense_detail['description']}}</td>
-                                <td>{{$expense_detail['amount']}}</td>
-                                <td>{{$expense_detail['date_of_expense']}}</td>
+                                <td>{{$expense_detail->category}}</td>
+                                <td width="200" align="center" >{{$expense_detail->description }}</td>
+                                <td>{{$expense_detail->amount}}</td>
+                                <td>{{   date('d-m-Y', strtotime($expense_detail->created_at)) }}</td>
                             </tr>
-                            <tr>
-                                {{ $expense_details[0] }}
-                            </tr>
+                            
                             @endforeach
                             </tbody>
                         </table>
