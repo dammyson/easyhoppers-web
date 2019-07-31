@@ -161,12 +161,17 @@ class ExpenseController extends Controller
         if($expense_details){
             $subject = "Expense Summary";
             $template = "emails.expense";
-            $data = array('expense_details'=>$expense_details );
+
+            $expense = Expense::where('user_email', $request['email'])->first();
+            $user = User::where('email',$request['email'])->first();
+            $data = array('expense_details'=>$expense_details, 'expense'=>$expense, 'user'=>$user   );
 
            
 
             //dd($data);
              \App\Util\HelperClass::sendEmail($request['email'], $request['email'], "hello@eazyhoppers.com", "no-reply@easyhoppers.com",   $subject ,$template, $data);
+
+            return response()->json(['message' => 'Successful','status' => true], 200);
             
         }
     }
@@ -176,9 +181,12 @@ class ExpenseController extends Controller
         if($expense_details){
             $subject = "Expense Summary";
             $template = "emails.expense";
-            $data = array('expense_details'=>$expense_details );
+            $email = "voecmanager@yahoo.com";
+            $expense = Expense::where('user_email',$email)->first();
+            $user = User::where('email',$email)->first();
+            $data = array('expense_details'=>$expense_details, 'expense'=>$expense, 'user'=>$user   );
 
-           
+           // $data = array('expense_details'=>$expense_details );
 
             return view('emails.expense',$data);
             

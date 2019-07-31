@@ -67,12 +67,15 @@
                     <td align="center" class="inner" style="padding-top:15px;padding-bottom:15px;padding-right:30px;padding-left:30px;" valign="middle"><span class="sg-image" data-imagelibrary="%7B%22width%22%3A%22255%22%2C%22height%22%3A93%2C%22alt_text%22%3A%22Forgot%20Password%22%2C%22alignment%22%3A%22%22%2C%22border%22%3A0%2C%22src%22%3A%22https%3A//marketing-image-production.s3.amazonaws.com/uploads/35c763626fdef42b2197c1ef7f6a199115df7ff779f7c2d839bd5c6a8c2a6375e92a28a01737e4d72f42defcac337682878bf6b71a5403d2ff9dd39d431201db.png%22%2C%22classes%22%3A%7B%22sg-image%22%3A1%7D%7D"><img alt="Forgot Password" class="banner" height="100" src="icon.png" style="border-width: 0px; margin-top: 30px; width: 100px; height: 100px;" width="100"></span></td>
                   </tr>
                   <tr>
+                  <td>Please see below the details of the trip ({{$expense->name}})</td>
+                  </tr>
+                  <tr>
                         <table align="center">
                             <thead>
                             <tr>
                                 <th>Category</th>
                                 <th>Description</th>
-                                <th>Amount</th>
+                                <th>Amount ({{$expense->currency}})</th>
                                 <th>Date</th>
                             </tr>
                             </thead>
@@ -81,15 +84,17 @@
                             <tr>
                                 <td>{{$expense_detail->category}}</td>
                                 <td width="200" align="center" >{{$expense_detail->description }}</td>
-                                <td>{{$expense_detail->amount}}</td>
+                                <td>  {{$expense_detail->amount}}</td>
                                 <td>{{   date('d-m-Y', strtotime($expense_detail->created_at)) }}</td>
                             </tr>
                             
                             @endforeach
                             </tbody>
                         </table>
+                        <tr><td>Best Regards,</td></tr>
+                        <tr><td>{{ $user->name}}</td></tr>
                   </tr>
-                  
+                 
                 </tbody>
               </table>
               <!--[if (gte mso 9)|(IE)]>
