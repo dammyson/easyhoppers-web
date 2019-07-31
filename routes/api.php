@@ -58,8 +58,6 @@ Route::middleware('auth:api')->group(function () {
 
    Route::get('/getSchedule/{id}', 'API\ScheduleController@get');
 
-
-
    Route::post('/expense/create', 'API\ExpenseController@create_expense');
    Route::get('/expense', 'API\ExpenseController@all_expense');
    Route::get('/expense/{id}', 'API\ExpenseController@expense_details');

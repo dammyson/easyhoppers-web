@@ -35,21 +35,24 @@ class SendUpdateToMobile
 
         $schedule = $event->getSchedule();
         if($schedule != null){
-            $schedule_id = $schedule->schedule;
-            $users = DB::select("select id, phone, email, mobile_token, subscription from eazyhopper_db.users  where subscription is not null or subscription != '';");
+
+            //$schedule_id = $schedule->schedule;
+            $users = \DB::select("select id, phone, email, mobile_token, subscription from eazyhopper_db.users  where subscription is not null or subscription != '';");
             if($users){
                 foreach ($users as $key => $user) {
                     $str_arr = explode (",", $user->subscription);
-
-                    if(array_key_exists( $schedule_id, $str_arr)) {
-                        if($schedule->type != 0){
-                            $title = self::get_status($schedule->type);
-                            self::send_notification($title, $schedule->schedule['schedule_name'] +" "+$title, $user->mobile_token);
+                    if($str_arr){
+                        $sch_id = $schedule->schedule['id'];
+                        if(in_array( $sch_id, $str_arr,TRUE)) {
+                            if($schedule->type != 0){
+                                $title = self::get_status($schedule->type);
+                                self::send_notification($title, $schedule->schedule['schedule_name'] +" "+$title, $user->mobile_token);
+                            }
+                           
+                            #call the function to send the push notification
                         }
-                       
-                        #call the function to send the push notification
-                        
                     }
+                   
                 }
             }
         }
