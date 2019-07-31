@@ -31,7 +31,7 @@ class SendUpdateToMobile
         $client = new Client('ws://'.env('WS'));
         // connect
         //$client->send(json_encode(['token' => encrypt(\Auth::id())]));
-        $client->send(json_encode(['schedule' => $event->getSchedule()]));
+        //$client->send(json_encode(['schedule' => $event->getSchedule()]));
 
         $schedule = $event->getSchedule();
         if($schedule != null){

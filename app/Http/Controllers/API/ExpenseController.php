@@ -145,4 +145,23 @@ class ExpenseController extends Controller
         }
         return response()->json(['message' => 'No expense found','status' => false ], 200);
     }
+
+    public function send_expense(Request $request){
+        $validator = \Validator::make($request->all(), [
+            'email' => 'required|email',
+            'expense_id' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+
+        $expense_details = ExpenseDetail::find($request->expense_id);
+        if($expense_details){
+            $subject = "Expense Summary";
+            $template = "emails.expense";
+            HelperClass::sendEmail($request['email'], $user->name, "hello@eazyhoppers.com", "no-reply@easyhoppers.com",   $subject ,$template, $data);
+            
+        }
+    }
 }
