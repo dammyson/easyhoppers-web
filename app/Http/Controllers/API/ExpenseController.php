@@ -162,8 +162,10 @@ class ExpenseController extends Controller
             $subject = "Expense Summary";
             $template = "emails.expense";
 
-            $expense = Expense::where('user_email', $request['email'])->first();
-            $user = User::where('email',$request['email'])->first();
+            $authUser = auth()->user();
+
+            $expense = Expense::where('user_email',  $authUser->email)->first();
+            $user = User::where('email',$authUser->email)->first();
             $data = array('expense_details'=>$expense_details, 'expense'=>$expense, 'user'=>$user   );
 
            

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Expense;
 use App\Role;
 use Illuminate\Http\Request;
 use Session;
@@ -100,6 +101,7 @@ class PassportController extends Controller
             $user->updated_at = \Carbon\Carbon::now();
             $user->mobile_token = $request->mobile_token;
             $user->save();
+          
             return response()->json(['status' => true, 'message'=> 'Login successful','token' => $token, 'Role' => $user_role ], 200);
         } else {
             return response()->json(['status' => false, 'message' => 'UnAuthorised'], 401);
@@ -115,7 +117,14 @@ class PassportController extends Controller
     {
         $user = auth()->user();
         if($user){
-            return response()->json(['status' => true,'message' => 'Successful','user' => $user], 200);
+
+            $expense_data = Expense::where('user_email', $user->email)->orderBy('created_at', 'desc')->first();
+            $exp_id = 0;
+            if($expense_data){
+                $exp_id = $expense_data->id;
+            }
+
+            return response()->json(['status' => true,'message' => 'Successful','user' => $user, 'expense_id' => $exp_id], 200);
         }
         return response()->json(['status' => false,'message' => 'No User found'], 200);
     }
