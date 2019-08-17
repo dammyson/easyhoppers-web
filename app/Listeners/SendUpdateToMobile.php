@@ -6,6 +6,7 @@ use App\Events\ScheduleChanged;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use WebSocket\Client;
+use GuzzleHttp\Client as GuzzleClient;
 
 class SendUpdateToMobile
 {
@@ -52,7 +53,7 @@ class SendUpdateToMobile
                                 $title = self::get_status($schedule->type);
                               //  $client->send(json_encode(['title' => $title]));
                               
-                            $notification_status = self::send_notifications($title,$schedule->schedule['name'] ." ".  $title , $user->mobile_token);
+                            $notification_status = self::sendNotification($title,$schedule->schedule['name'] ." ".  $title , $user->mobile_token);
                               // $client->send(json_encode(['notification_status' => $notification_status]));
                             }
                            
@@ -129,6 +130,38 @@ if ($err) {
 } else {
   echo $response;
 }
+    }
+
+
+    private function sendNotification($title, $message, $mobile_token){
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'key=AAAAj28AfqA:APA91bGhY6xKxzehRtJuOV0J1mfo04eZEiyF4GbxxcsAY2Guy6Gs_u7WxqJ3NUn22tbKUk8dzdTkDiATv7Bxi4ILzb8NM8_aW8ktY1JMrbWEYnqYf4G60Oe5hHTwiBu6ZBlNqvu_ZbBs'
+        ];
+        
+        $client = new GuzzleClient([
+            'headers' => $headers
+        ]);
+        
+        // $body = '{
+        //     "key1" : '.$value1.',
+        //     "key2" : '.$value2.',
+        // }';
+
+        $body = '{
+            "notification": {
+                "title": "'.$title.'",
+                "body" : "'.$message.'"
+            },
+            "registration_ids": [
+                "'.$mobile_token.'"]
+            }';
+        
+        $r = $client->request('POST', 'https://fcm.googleapis.com/fcm/send', [
+            'body' => $body
+        ]);
+        $response = $r->getBody()->getContents();
+         //$client->send(json_encode(['response' => $response]));
     }
 
     private function get_status($status){
