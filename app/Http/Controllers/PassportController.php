@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Session;
 use Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\SignupActivate;
 
 class PassportController extends Controller
 {
@@ -26,7 +27,7 @@ class PassportController extends Controller
     public function register(Request $request)
     {
         $digits = 10;
-        $request->unique_id = rand(pow(10, $digits-1), pow(10, $digits)-1);
+        $request->unique_id = rand(pow(10, $digits-1), pow(10, $digits - 2)-1);
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'state' => 'required|min:3',

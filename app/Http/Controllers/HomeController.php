@@ -20,10 +20,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware(['auth', 'verified']);
+    // }
 
     /**
      * Show the application dashboard.
@@ -332,15 +332,23 @@ class HomeController extends Controller
 
     public function signupActivate($token)
     {
+        Session::flash('signupActivate', '');
         $user = User::where('activation_token', $token)->first();
         if (!$user) {
-            return response()->json([
-                'message' => 'This activation token is invalid.'
-            ], 404);
-        }
+            //return view('auth.activate');
+            $data = "This activation token is invalid.";
+            Session::flash('error', $data);
+            // return response()->json([
+            //     'message' => 'This activation token is invalid.'
+            // ], 404);
+        }else{
         $user->active = true;
         $user->activation_token = '';
         $user->save();
-        return $user;
+        $data = "Account activated.";
+        //return $user;
+        Session::flash('success', $data);
+        }
+        return view('auth.activate');
     }
 }
