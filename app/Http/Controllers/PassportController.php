@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Validator;
 class PassportController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware(['auth', 'verified']);
+    // }
    /**
      * Handles Registration Request
      *
@@ -53,9 +53,10 @@ class PassportController extends Controller
             'city' => $request->city,
             'unique_id' => $request->unique_id,
             'phone' => $request->phone,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'activation_token' => str_random(60)
         ]);
-        
+        $user->notify(new SignupActivate($user));
         $user->roles()->attach($role_customer);
         $token = $user->createToken($request->email)->accessToken;
  
@@ -91,7 +92,15 @@ class PassportController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ];
- 
+        
+        $credential = request(['email', 'password']);
+        $credential['active'] = 1;
+        $credential['deleted_at'] = null;
+        if(!Auth::attempt($credential))
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+
         if (auth()->attempt($credentials)) {
             $user = Auth::user();
             if($user->status != 0){

@@ -9,7 +9,8 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable ,SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','fullname','terminal','unique_id', 'phone','state','city','DOB','occupation','firstname','lastname','gender','mobile_token'
+        'name', 'email', 'password','fullname','terminal','unique_id', 'phone','state','city','DOB','occupation','firstname','lastname','gender','mobile_token', 'active', 'activation_token'
     ];
 
     /**
@@ -26,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'activation_token'
     ];
 
     /**

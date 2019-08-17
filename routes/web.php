@@ -59,5 +59,7 @@ Route::group(['middleware' => ['web','auth']], function () {
 
 Route::get('/expense/send_expense', 'API\ExpenseController@send_exp');
 
+Route::get('signup/activate/{token}', 'HomeController@signupActivate');
+
 Auth::routes(['verify' => true]);
 
