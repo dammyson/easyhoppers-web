@@ -52,9 +52,11 @@ class SendUpdateToMobile
                          if($schedule->type != 0){
                                 $title = self::get_status($schedule->type);
                               //  $client->send(json_encode(['title' => $title]));
+                              $customMessage = $schedule->schedule['description'] ." :: ".  $title;
+                            $notification_status = self::sendNotification($title, $customMessage , $user->mobile_token);
+                            //$client->send(json_encode(['notification_status_message' => $customMessage]));
+
                               
-                            $notification_status = self::sendNotification($title,$schedule->schedule['name'] ." ".  $title , $user->mobile_token);
-                              // $client->send(json_encode(['notification_status' => $notification_status]));
                             }
                            
                             #call the function to send the push notification
@@ -68,71 +70,6 @@ class SendUpdateToMobile
         }
     }
 
-    private function send_notification($title, $message, $mobile_token){
-
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://fcm.googleapis.com/fcm/send",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => "{\"notification\": {\"title\": \"$title\",\"body\" : \"$message\"},\"registration_ids\": [\"$mobile_token\"]}",
-        CURLOPT_HTTPHEADER => array(
-            "authorization: key=AAAAj28AfqA:APA91bGhY6xKxzehRtJuOV0J1mfo04eZEiyF4GbxxcsAY2Guy6Gs_u7WxqJ3NUn22tbKUk8dzdTkDiATv7Bxi4ILzb8NM8_aW8ktY1JMrbWEYnqYf4G60Oe5hHTwiBu6ZBlNqvu_ZbBs",
-            "content-type: application/json"
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private function send_notifications($title, $message, $mobile_token){
-        $curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://fcm.googleapis.com/fcm/send",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => "{\r\n\"notification\": {\r\n\t\"title\": \"$title\",\r\n\t\"body\" : \"$message\"\r\n},\r\n\"registration_ids\": [\r\n\t\"$mobile_token\"]\r\n}",
-  CURLOPT_HTTPHEADER => array(
-    "authorization: key=AAAAj28AfqA:APA91bGhY6xKxzehRtJuOV0J1mfo04eZEiyF4GbxxcsAY2Guy6Gs_u7WxqJ3NUn22tbKUk8dzdTkDiATv7Bxi4ILzb8NM8_aW8ktY1JMrbWEYnqYf4G60Oe5hHTwiBu6ZBlNqvu_ZbBs",
-    "cache-control: no-cache",
-    "content-type: application/json",
-    "postman-token: 43d39a52-39ba-3af0-9500-0b767af5699d"
-  ),
-));
-
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}
-    }
-
-
     private function sendNotification($title, $message, $mobile_token){
         $headers = [
             'Content-Type' => 'application/json',
@@ -143,10 +80,6 @@ if ($err) {
             'headers' => $headers
         ]);
         
-        // $body = '{
-        //     "key1" : '.$value1.',
-        //     "key2" : '.$value2.',
-        // }';
 
         $body = '{
             "notification": {
