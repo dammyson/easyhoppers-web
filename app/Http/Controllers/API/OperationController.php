@@ -232,4 +232,22 @@ class OperationController extends Controller
 
 
     }
+
+    public function getAirlinePerformanceComparism(Request $request){
+
+        $validator = \Validator::make($request->all(), [
+            'route_id' => 'required',
+            'status' => 'required'
+        ]);
+        $error = $validator->errors()->first();
+        if ($validator->fails()) {
+            return response()->json(['message' => $error, 'status' => false ], 200);
+        }
+
+       $result = DB::select('call get_flight_performance(?,?)',array($request->route_id,$request->status));
+        if($result){
+            return response()->json([ 'status' => true,'message' => 'Successful', 'data' => $result], 200);
+        }
+        return response()->json([ 'false' => true,'message' => 'No results'], 200);
+    }
 }

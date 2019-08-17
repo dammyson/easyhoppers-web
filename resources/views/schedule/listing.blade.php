@@ -75,7 +75,7 @@
                             @elseif($schedule->status == 1)
                               <span class="badge badge-success">On Ground</span>
                             @elseif($schedule->status == 2)
-                              <span class="badge badge-success">Air Born</span>
+                              <span class="badge badge-success">Air Borne</span>
                             @elseif($schedule->status == 3)
                               <span class="badge badge-warning">Delayed</span>
                             @elseif($schedule->status == 4)
