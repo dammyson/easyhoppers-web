@@ -36,9 +36,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::put('user/update', 'HomeController@update_user');
     
-   Route::get('routes', 'RouteController@list');
-   Route::get('airlines', 'AirlineController@list');
-   Route::get('airports', 'AirPortController@list');
+//    Route::get('routes', 'RouteController@list');
+//    Route::get('airlines', 'AirlineController@list');
+//    Route::get('airports', 'AirPortController@list');
 
    Route::get('schedules', 'API\ScheduleController@index');
    Route::put('schedule/update/{id}', 'API\ScheduleController@update');
@@ -56,6 +56,12 @@ Route::middleware('auth:api')->group(function () {
    Route::post('/performanceAggregation', 'API\OperationController@performanceAggregation');
    Route::post('/genericPerformance', 'API\OperationController@genericPerformance');
    Route::post('/getAirlinePerformanceComparism', 'API\OperationController@getAirlinePerformanceComparism');
+
+
+   Route::get('/airlines', 'API\OperationController@airline_list');
+   Route::get('/airports', 'API\OperationController@airport_list');
+   Route::get('/routes', 'API\OperationController@route_list');
+
 
    Route::get('/getSchedule/{id}', 'API\ScheduleController@get');
 

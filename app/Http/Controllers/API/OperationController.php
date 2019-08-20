@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\User;
 use App\Schedule;
+use App\Route;
+use App\AirPort;
+use App\Airline;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\ViewModel\ScheduleVM;
@@ -237,17 +240,43 @@ class OperationController extends Controller
 
         $validator = \Validator::make($request->all(), [
             'route_id' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'from' => 'required',
+            'to' => 'required'
         ]);
         $error = $validator->errors()->first();
         if ($validator->fails()) {
             return response()->json(['message' => $error, 'status' => false ], 200);
         }
 
-       $result = DB::select('call get_flight_performance(?,?)',array($request->route_id,$request->status));
+       $result = DB::select('call get_flight_performance(?,?,?,?)',array($request->route_id,$request->status, $request->from, $request->to));
         if($result){
-            return response()->json([ 'status' => true,'message' => 'Successful', 'data' => $result], 200);
+            $iret = array();
+            foreach ($result as $key => $value) {
+                $iData = new \stdClass;
+                $iData->airline = $value->airline;
+                $iData->percentage =  (float)$value->percentage;
+
+                array_push($iret, $iData);
+            }
+
+            return response()->json([ 'status' => true,'message' => 'Successful', 'data' => $iret], 200);
         }
         return response()->json([ 'false' => true,'message' => 'No results'], 200);
+    }
+
+    public function airline_list(){
+        $airline = Airline::all();
+        return response()->json(['message' => $airline, 'status' => true ], 200);
+    }
+
+    public function airport_list(){
+        $airport = AirPort::all();
+        return response()->json(['message' => $airport, 'status' => true ], 200);
+    }
+
+    public function route_list(){
+        $routes = Route::orderBy('code', 'asc')->get();
+        return response()->json(['message' => $routes, 'status' => true ], 200);
     }
 }
