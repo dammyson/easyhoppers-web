@@ -267,6 +267,18 @@ class OperationController extends Controller
 
     public function airline_list(){
         $airline = Airline::all();
+        if($airline->count() > 0){
+            $iret = array();
+            foreach ($airline as $key => $value) {
+                $iData = new \stdClass;
+                $iData->Id = (int)$value->id;
+                $iData->Name =  $value->name;
+                $iData->Value = (string)$value->id;
+
+                array_push($iret, $iData);
+            }
+            return response()->json(['message' => $airline, 'status' => true, 'data' =>$iret ], 200);
+        }
         return response()->json(['message' => $airline, 'status' => true ], 200);
     }
 
@@ -277,6 +289,18 @@ class OperationController extends Controller
 
     public function route_list(){
         $routes = Route::orderBy('code', 'asc')->get();
+        if($routes->count() > 0){
+            $iret = array();
+            foreach ($routes as $key => $value) {
+                $iData = new \stdClass;
+                $iData->Id = (int)$value->id;
+                $iData->Name =  $value->code;
+                $iData->Value = (string)$value->id;
+
+                array_push($iret, $iData);
+            }
+            return response()->json(['message' => $routes, 'status' => true, 'data' =>$iret ], 200);
+        }
         return response()->json(['message' => $routes, 'status' => true ], 200);
     }
 }
