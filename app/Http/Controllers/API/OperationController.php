@@ -62,41 +62,45 @@ class OperationController extends Controller
         $weekEndDate = $request->to;
 
         $schGrps = DB::select("select airlineCode, route_id FROM schedules s  where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' group by airlineCode, route_id "); 
-        
+       
         foreach ($schGrps as $key => $schGrp) {
             
            
-            $schedules = Schedule::where('route_id',$schGrp->route_id)->where('airlineCode',$schGrp->airlineCode)->get();
-            $ischedules = DB::select("select s.id,al.code airCode,s.airlineCode ,al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, r.departure_port_name, r.arrival_port_name, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' and  s.route_id = '$schGrp->route_id' and  s.airlineCode  = '$schGrp->airlineCode' ");
+            $schedules = Schedule::where('route_id',$schGrp->route_id)->where('airlineCode',$schGrp->airlineCode)->whereBetween('scheduled_departure_date', [$weekStartDate, $weekEndDate])->get();
+            $firstSchedule = DB::select("select s.id,al.code airCode,s.airlineCode ,al.name, s.description, s.scheduled_departure_time, s.scheduled_arrival_time, r.code, r.departure_port, r.arrival_port, r.departure_port_name, r.arrival_port_name, status, s.scheduled_departure_date, s.scheduled_arrival_date FROM schedules s  left join airlines al on al.code = s.airlineCode LEFT JOIN routes r on r.id = s.route_id where s.scheduled_departure_date between '$weekStartDate' and '$weekEndDate' and  s.route_id = '$schGrp->route_id' and  s.airlineCode  = '$schGrp->airlineCode' ");
             if($schedules){
-                $percentageOnTimeArrivals = self::percentageOnTimeArrivals( $schedules );
-                $percentageOnTimeDepartures = self::percentageOnTimeDepartures( $schedules );
-                $percentageCancellations = self::percentageCancellations( $schedules );
-                $percentageDelayedArrivals = self::percentageDelayedArrivals( $schedules );
-                $percentageDelayedDepartures = self::percentageDelayedDepartures( $schedules );
-                $percentageEarlyDepartures = self::percentageEarlyDepartures( $schedules );
-                $percentageEarlyArrival= self::percentageEarlyArrival( $schedules );
                 
+                $total_schedule_count = $schedules->count();
+
+                $percentageOnTimeArrivals = self::percentageOnTimeArrivals( $schedules, $total_schedule_count );
+                $percentageOnTimeDepartures = self::percentageOnTimeDepartures( $schedules, $total_schedule_count );
+                $percentageCancellations = self::percentageCancellations( $schedules, $total_schedule_count );
+                $percentageDelayedArrivals = self::percentageDelayedArrivals( $schedules, $total_schedule_count );
+                $percentageDelayedDepartures = self::percentageDelayedDepartures( $schedules, $total_schedule_count );
+                $percentageEarlyDepartures = self::percentageEarlyDepartures( $schedules, $total_schedule_count );
+                $percentageEarlyArrival= self::percentageEarlyArrival( $schedules, $total_schedule_count );
                 
-                $firstSchedule = $ischedules;
-                $ischedules[0]->name;
+                $route = Route::select('id','departure_port_name','arrival_port_name', 'code')->where('id', $schGrp->route_id)->first();
+
                 $flightObj =  new \stdClass;
-                $flightObj->percentageOnTimeArrivals = $percentageOnTimeArrivals;
-                $flightObj->percentageOnTimeDepartures = $percentageOnTimeDepartures;
-                $flightObj->percentageCancellations = $percentageCancellations;
-                $flightObj->percentageDelayedArrivals = $percentageDelayedArrivals;
-                $flightObj->percentageDelayedDepartures = $percentageDelayedDepartures;
-                $flightObj->percentageEarlyDepartures = $percentageEarlyDepartures;
-                $flightObj->percentageEarlyArrival = $percentageEarlyArrival;
+                $flightObj->percentageOnTimeArrivals = round($percentageOnTimeArrivals,2);
+                $flightObj->percentageOnTimeDepartures = round($percentageOnTimeDepartures,2);
+                $flightObj->percentageCancellations = round($percentageCancellations,2);
+                $flightObj->percentageDelayedArrivals = round($percentageDelayedArrivals,2);
+                $flightObj->percentageDelayedDepartures = round($percentageDelayedDepartures,2);
+                $flightObj->percentageEarlyDepartures = round($percentageEarlyDepartures,2);
+                $flightObj->percentageEarlyArrival = round($percentageEarlyArrival,2);
                 $flightObj->description = $firstSchedule[0]->description;
                 $flightObj->flight = $firstSchedule[0]->name;
-                $flightObj->airlineId = $firstSchedule[0]->airlineCode;
-                $flightObj->routeId = $firstSchedule[0]->id;
-                $flightObj->route = $firstSchedule[0]->code;
-                $flightObj->departure_port_name = $firstSchedule[0]->departure_port_name;
-                $flightObj->arrival_port_name = $firstSchedule[0]->arrival_port_name;
+                $flightObj->airlineId = $schGrp->airlineCode;
+                $flightObj->routeId = $schGrp->route_id;
+                $flightObj->route = $route['code'];
+                $flightObj->departure_port_name = $route['departure_port_name'];
+                $flightObj->arrival_port_name = $route['arrival_port_name'];
                 
                 array_push($items,$flightObj);
+
+            
             }
 
         }
@@ -104,13 +108,12 @@ class OperationController extends Controller
 
     }
 
-    public function percentageOnTimeArrivals($schedules){
+    public function percentageOnTimeArrivals($schedule, $totalArrivedSchedule){
         
-        $totalArrivedSchedule = $schedules->count();
         $noOfArrivalsOnTime = 0;
 
 
-        $noOfArrivalsOnTime = $schedules->where('status','1')->count(); 
+        $noOfArrivalsOnTime = $schedule->where('status','1')->count(); 
        
         if($noOfArrivalsOnTime == 0 ){
             return 0;
@@ -118,12 +121,11 @@ class OperationController extends Controller
         return  ($noOfArrivalsOnTime / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageOnTimeDepartures($schedules){
-        
-        $totalDepartureSchedule = $schedules->count();
+    public function percentageOnTimeDepartures($schedule, $totalDepartureSchedule){
+
         $noOfDeparturesOnTime = 0;
 
-        $noOfDeparturesOnTime = $schedules->where('status','2')->count(); 
+        $noOfDeparturesOnTime = $schedule->where('status','2')->count(); 
 
         if($noOfDeparturesOnTime == 0 ){
             return 0;
@@ -131,9 +133,8 @@ class OperationController extends Controller
         return  ($noOfDeparturesOnTime / $totalDepartureSchedule) * 100;
     }
 
-    public function percentageCancellations($schedule){
+    public function percentageCancellations($schedule, $totalArrivedSchedule){
         
-        $totalArrivedSchedule = $schedule->count();
         $totalcancelledSchedules = $schedule->where('status','5')->count();
         if($totalcancelledSchedules == 0 ){
             return 0;
@@ -141,9 +142,8 @@ class OperationController extends Controller
         return ($totalcancelledSchedules / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageDelayedArrivals($schedule){
+    public function percentageDelayedArrivals($schedule, $totalArrivedSchedule){
 
-        $totalArrivedSchedule = $schedule->count();
         $totalDelayedSchedule = $schedule->where('status','3')->count();
         if($totalDelayedSchedule == 0 ){
             return 0;
@@ -151,9 +151,8 @@ class OperationController extends Controller
         return ($totalDelayedSchedule / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageDelayedDepartures($schedule){
+    public function percentageDelayedDepartures($schedule, $totalArrivedSchedule){
         
-        $totalArrivedSchedule = $schedule->count();
         $totalDelayedSchedule = $schedule->where('status','4')->count();
         if($totalDelayedSchedule == 0 ){
             return 0;
@@ -161,9 +160,8 @@ class OperationController extends Controller
         return ($totalDelayedSchedule / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageRescheduled($schedule){
+    public function percentageRescheduled($schedule, $totalArrivedSchedule){
         
-        $totalArrivedSchedule = $schedule->count();
         $totalRescheduled = $schedule->where('status','6')->count();
         if($totalRescheduled == 0 ){
             return 0;
@@ -171,9 +169,8 @@ class OperationController extends Controller
         return ($totalRescheduled / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageEarlyArrival($schedule){
-        
-        $totalArrivedSchedule = $schedule->count();
+    public function percentageEarlyArrival($schedule, $totalArrivedSchedule){
+
         $totalRescheduled = $schedule->where('status','11')->count();
         if($totalRescheduled == 0 ){
             return 0;
@@ -181,9 +178,8 @@ class OperationController extends Controller
         return ($totalRescheduled / $totalArrivedSchedule) * 100;
     }
 
-    public function percentageEarlyDepartures($schedule){
+    public function percentageEarlyDepartures($schedule, $totalArrivedSchedule){
         
-        $totalArrivedSchedule = $schedule->count();
         $totalRescheduled = $schedule->where('status','12')->count();
         if($totalRescheduled == 0 ){
             return 0;

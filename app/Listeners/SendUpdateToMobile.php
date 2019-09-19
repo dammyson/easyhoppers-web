@@ -114,5 +114,9 @@ class SendUpdateToMobile
         return "Flight Cancelled";
       elseif($status == 7)
         return "Flight has been rescheduled";
+      elseif($status == 11)
+        return "Flight has arrived earlier than scheduled";
+      elseif($status == 12)
+        return "Flight departed earlier than scheduled";
     }
 }
