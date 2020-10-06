@@ -15,11 +15,11 @@ class CreateRoutesTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('departure_port');
-            $table->string('arrival_port');
-            $table->string('departure_port_name');
-            $table->string('arrival_port_name');
-            $table->string('code');
+            $table->string('departure_port')->nullable();
+            $table->string('arrival_port')->nullable();
+            $table->string('departure_port_name')->nullable();
+            $table->string('arrival_port_name')->nullable();
+            $table->string('code')->nullable();
             $table->timestamps();
         });
     }

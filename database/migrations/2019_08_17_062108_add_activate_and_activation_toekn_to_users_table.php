@@ -16,7 +16,7 @@ class AddActivateAndActivationToeknToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->boolean('active')->default(false);
-            $table->string('activation_token');
+            $table->string('activation_token')->nullable();
             $table->softDeletes();
         });
     }
